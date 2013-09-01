@@ -285,7 +285,7 @@ define () ->
 
     # Timezone in +HHMM or -HHMM format
     '%z': () ->
-      pfx = if @getTimezoneOffset() >= 0 then '+' else '-'
+      pfx = if @getTimezoneOffset() <= 0 then '+' else '-'
       tz = Math.abs @getTimezoneOffset()
       "#{pfx}#{zeroPad ~~(tz / 60), 2}#{zeroPad tz % 60, 2}"
 
@@ -391,13 +391,12 @@ define () ->
         if s is 'Z'
           meta.timezone = 0
         else
-          mult = if s[0] is '-' then -1 else 1
+          mult = if s[0] is '-' then 1 else -1
           h = parseInt s[1..2], 10
           m = parseInt s[3..4], 10
           meta.timezone = mult * (h * 60) + m
 
-  dt.ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%r%Z'
-  dt.ISO_UTC_FORMAT = '%Y-%m-%dT%H:%M:%S.%rZ'
+  dt.ISO_FORMAT = '%Y-%m-%dT%H:%M:%f'
 
 
   #############################################################################
@@ -444,7 +443,7 @@ define () ->
   # Shift the time `t` milliseconds.
   dt.datetime.shiftTime = (t) ->
     d = new Date d
-    d.setTime(d.getTime() + t)
+    d.setMilliseconds d.getMilliseconds() + t
     d
 
   # ## `datetime.datetime.toUTC(d)
@@ -746,9 +745,25 @@ define () ->
       localOffset = d.getTimezoneOffset()
       # We need to shift the time by the difference of timezone and local
       # zone
-      offset = (localOffset - meta.timezone) * 60 * 1000  # in ms
-      d = dt.datetime.shiftTime offset
+      offset = localOffset - meta.timezone
+      d.setMinutes d.getMinutes() + offset
 
+    d
+
+  # ## datetime.isoformat(d)
+  #
+  # Returns the ISO formatted date `d` in UTC timezone.
+  dt.isoformat = (d) ->
+    d = dt.datetime.toUTC(d)
+    dt.strftime(d, dt.ISO_FORMAT)
+
+  # ## datetime.isoparse(s)
+  #
+  # Return a `Date` object parsed from ISO-formatted date `s`.
+  dt.isoparse = (s) ->
+    d = @strptime(s, dt.ISO_FORMAT)
+    # Account for the timezone difference since original date is in UTC
+    d.setMinutes d.getMinutes() + d.getTimezoneOffset()
     d
 
   dt

@@ -169,7 +169,7 @@ define(function() {
     },
     '%z': function() {
       var pfx, tz;
-      pfx = this.getTimezoneOffset() >= 0 ? '+' : '-';
+      pfx = this.getTimezoneOffset() <= 0 ? '+' : '-';
       tz = Math.abs(this.getTimezoneOffset());
       return "" + pfx + (zeroPad(~~(tz / 60), 2)) + (zeroPad(tz % 60, 2));
     },
@@ -352,7 +352,7 @@ define(function() {
           if (s === 'Z') {
             return meta.timezone = 0;
           } else {
-            mult = s[0] === '-' ? -1 : 1;
+            mult = s[0] === '-' ? 1 : -1;
             h = parseInt(s.slice(1, 3), 10);
             m = parseInt(s.slice(3, 5), 10);
             return meta.timezone = mult * (h * 60) + m;
@@ -361,8 +361,7 @@ define(function() {
       };
     }
   };
-  dt.ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%r%Z';
-  dt.ISO_UTC_FORMAT = '%Y-%m-%dT%H:%M:%S.%rZ';
+  dt.ISO_FORMAT = '%Y-%m-%dT%H:%M:%f';
   dt.datetime.addDays = function(d, v) {
     d = new Date(d);
     d.setDate(d.getDate() + v);
@@ -386,7 +385,7 @@ define(function() {
   dt.datetime.shiftTime = function(t) {
     var d;
     d = new Date(d);
-    d.setTime(d.getTime() + t);
+    d.setMilliseconds(d.getMilliseconds() + t);
     return d;
   };
   dt.datetime.toUTC = function(d) {
@@ -522,9 +521,19 @@ define(function() {
     d = new Date(meta.year, meta.month, meta.date, (meta.timeAdjust ? hour24(meta.hour) : meta.hour), meta.minute, meta.second, meta.millisecond);
     if (meta.timezone != null) {
       localOffset = d.getTimezoneOffset();
-      offset = (localOffset - meta.timezone) * 60 * 1000;
-      d = dt.datetime.shiftTime(offset);
+      offset = localOffset - meta.timezone;
+      d.setMinutes(d.getMinutes() + offset);
     }
+    return d;
+  };
+  dt.isoformat = function(d) {
+    d = dt.datetime.toUTC(d);
+    return dt.strftime(d, dt.ISO_FORMAT);
+  };
+  dt.isoparse = function(s) {
+    var d;
+    d = this.strptime(s, dt.ISO_FORMAT);
+    d.setMinutes(d.getMinutes() + d.getTimezoneOffset());
     return d;
   };
   return dt;
