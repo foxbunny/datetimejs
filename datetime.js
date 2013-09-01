@@ -427,19 +427,20 @@ define(function() {
       composite: [~~days, ~~hrs, ~~mins, ~~secs, msecs]
     };
   };
+  dt.datetime.reorder = function() {
+    var d,
+      _this = this;
+    d = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    d.sort(function(d1, d2) {
+      return -_this.delta(d1, d2).delta;
+    });
+    return d;
+  };
   dt.datetime.isBefore = function(d, d1) {
     return this.delta(d, d1).delta > 0;
   };
   dt.datetime.isAfter = function(d, d1) {
     return this.delta(d, d1).delta < 0;
-  };
-  dt.datetime.reorder = function() {
-    var d;
-    d = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    d.sort(function(d1, d2) {
-      return this.delta(d1, d2).delta;
-    });
-    return d;
   };
   dt.datetime.isBetween = function(d, d1, d2) {
     var _ref;

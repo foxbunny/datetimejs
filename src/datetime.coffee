@@ -538,6 +538,13 @@ define () ->
     days: Math.ceil days
     composite: [~~days, ~~hrs, ~~mins, ~~secs, msecs]
 
+  # ## `datetime.datetime.reorder(d, [d1, d2...])
+  #
+  # Reorder `Date` objects from oldest to newest and return an array.
+  dt.datetime.reorder = (d...) ->
+    d.sort (d1, d2) => -@delta(d1, d2).delta
+    d
+
   # ## `datetime.datetime.isBefore(d, d1)`
   #
   # Whether `d` is before `d1`.
@@ -555,13 +562,6 @@ define () ->
   # `#isBefore()` becuase objects could also be equal.
   dt.datetime.isAfter = (d, d1) ->
     @delta(d, d1).delta < 0
-
-  # ## `datetime.datetime.reorder(d, [d1, d2...])
-  #
-  # Reorder `Date` objects from oldest to newest and return an array.
-  dt.datetime.reorder = (d...) ->
-    d.sort (d1, d2) -> @delta(d1, d2).delta
-    d
 
   # ## `datetime.datetime.isBetween(d, d1, d2)`
   #
