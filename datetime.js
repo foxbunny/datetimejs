@@ -27,7 +27,7 @@ define(function() {
   var AM, DAYS, DAY_MS, DY, MNTH, MONTHS, PARSE_TOKEN_RE, PM, REGEXP_CHARS, cycle, dt, hour24, zeroPad;
   DAY_MS = 86400000;
   REGEXP_CHARS = '^$[]().{}+*?|'.split('');
-  PARSE_TOKEN_RE = /(%[bBdDHiImMnNpsSryY])/g;
+  PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g;
   dt = {
     utils: {},
     datetime: {}
@@ -98,7 +98,14 @@ define(function() {
       return zeroPad(this.getDate(), 2);
     },
     '%D': function() {
-      return "" + this.getDate;
+      return "" + (this.getDate());
+    },
+    '%f': function() {
+      var fs, m, s;
+      s = this.getSeconds();
+      m = this.getMilliseconds();
+      fs = Math.round((s + m / 1000) * 100) / 100;
+      return zeroPad(fs, 5, 2);
     },
     '%H': function() {
       return zeroPad(this.getHours(), 2);
@@ -128,7 +135,7 @@ define(function() {
     },
     '%p': function() {
       return (function(h) {
-        if ((0 > h && h <= 12)) {
+        if ((0 <= h && h < 12)) {
           return AM;
         } else {
           return PM;
@@ -167,9 +174,6 @@ define(function() {
     },
     '%%': function() {
       return '%';
-    },
-    '%f': function() {
-      return '';
     },
     '%U': function() {
       return '';
@@ -220,6 +224,16 @@ define(function() {
         re: '3[01]|[12]?\\d',
         fn: function(s, meta) {
           return meta.date = parseInt(s, 10);
+        }
+      };
+    },
+    '%f': function() {
+      return {
+        re: '\\d{2}\\.\\d{2}',
+        fn: function(s, meta) {
+          s = parseFloat(s);
+          meta.second = ~~s;
+          return meta.millisecond = (s - ~~s) * 1000;
         }
       };
     },
@@ -326,6 +340,22 @@ define(function() {
         re: '\\d{4}',
         fn: function(s, meta) {
           return meta.year = parseInt(s, 10);
+        }
+      };
+    },
+    '%z': function() {
+      return {
+        re: '[+-](?1[01]|0\\d)[0-5]\\d|Z',
+        fn: function(s, meta) {
+          var h, m, mult;
+          if (s === 'Z') {
+            return meta.timezone = 'UTC';
+          } else {
+            mult = s[0] === '-' ? -1 : 1;
+            h = parseInt(s.slice(1, 3), 10);
+            m = parseInt(s.slice(3, 5), 10);
+            return meta.timezone = mult * (h * 60) + m;
+          }
         }
       };
     }

@@ -23,7 +23,7 @@ define = ((root) ->
 define () ->
   DAY_MS = 86400000 # Number of milliseconds in a day
   REGEXP_CHARS = '^$[]().{}+*?|'.split ''
-  PARSE_TOKEN_RE = /(%[bBdDHiImMnNpsSryY])/g
+  PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g
 
   dt =
     utils: {}
@@ -220,7 +220,14 @@ define () ->
     '%d': () -> zeroPad @getDate(), 2
 
     # * Non-zero-padded date (day of month)
-    '%D': () -> "#{@getDate}"
+    '%D': () -> "#{@getDate()}"
+
+    # Zero-padded seconds with decimal part
+    '%f': () ->
+      s = @getSeconds()
+      m = @getMilliseconds()
+      fs = Math.round((s + m / 1000) * 100) / 100
+      zeroPad fs, 5, 2
 
     # Zero-padded hour in 24-hour format
     '%H': () -> zeroPad @getHours(), 2
@@ -249,7 +256,7 @@ define () ->
     '%N': () -> "#{@getMinutes()}"
 
     # am/pm
-    '%p': () -> ((h) -> if 0 > h <= 12 then AM else PM) @getHours()
+    '%p': () -> ((h) -> if 0 <= h < 12 then AM else PM)(@getHours())
 
     # Non-zero-padded seconds
     '%s': () -> "#{@getSeconds()}"
@@ -285,7 +292,6 @@ define () ->
     '%%': () -> '%'
 
     # Unsupported
-    '%f': () -> ''
     '%U': () -> ''
     '%Z': () -> ''
 
@@ -319,6 +325,12 @@ define () ->
       re: '3[01]|[12]?\\d'
       fn: (s, meta) ->
         meta.date = parseInt s, 10
+    '%f': () ->
+      re: '\\d{2}\\.\\d{2}'
+      fn: (s, meta) ->
+        s = parseFloat s
+        meta.second = ~~s
+        meta.millisecond = (s - ~~s) * 1000
     '%H': () ->
       re: '[0-1]\\d|2[0-3]'
       fn: (s, meta) ->
@@ -372,6 +384,16 @@ define () ->
       re: '\\d{4}'
       fn: (s, meta) ->
         meta.year = parseInt s, 10
+    '%z': () ->
+      re: '[+-](?1[01]|0\\d)[0-5]\\d|Z'
+      fn: (s, meta) ->
+        if s is 'Z'
+          meta.timezone = 'UTC'
+        else
+          mult = if s[0] is '-' then -1 else 1
+          h = parseInt s[1..2], 10
+          m = parseInt s[3..4], 10
+          meta.timezone = mult * (h * 60) + m
 
   dt.ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%r%Z'
   dt.ISO_UTC_FORMAT = '%Y-%m-%dT%H:%M:%S.%rZ'
@@ -597,6 +619,7 @@ define () ->
   #  + %c - Locale-formatted date and time (platform-dependent)
   #  + %d - Zero-padded date (e.g, 02, 31...)
   #  + %D - Non-zero-padded date (e.g., 2, 31...)
+  #  + %f - Zero-padded decimal seconds (e.g., 04.23, 23.50)
   #  + %H - Zero-padded hour in 24-hour format (e.g., 8, 13, 0...)
   #  + %i - Non-zero-padded hour in 12-hour format (e.g., 8, 1, 12...)
   #  + %I - Zero-padded hour in 12-hour format (e.g., 08, 01, 12...)
@@ -653,9 +676,11 @@ define () ->
   #  + %r - Milliseconds (e.g., 1, 24, 500...)
   #  + %y - Zero-padded year without the century part (e.g., 01, 13, 99...)
   #  + %Y - Full year (e.g., 2001, 2013, 2099...)
+  #  + %z - Time zone in +HHMM or -HHMM format or 'Z' (e.g., +1000, -0200)
   #
-  # Note that timezone is not taken into account. The `Date` object will be
-  # returned in the system's time zone.
+  # The `%z` token behaves slightly differently when parsing date and time
+  # strings. In addition to formats that strftime outputs, it also supports
+  # 'Z', which allows parsing of ISO timestamps.
   dt.strptime = (s, format) ->
     # Escape all regexp special characters
     rxp = format.replace /\\/, '\\\\'
