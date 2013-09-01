@@ -84,9 +84,9 @@ describe 'datetime.strftime', () ->
     # We must mock the timezone method
     original = d.getTimezoneOffset
     d.getTimezoneOffset = () -> -120  # minus 2 hours
-    eq sft(d, '%z'), '-0200'
+    eq sft(d, '%z'), '+0200'
     d.getTimezoneOffset = () -> 360  # plus 6 hours
-    eq sft(d, '%z'), '+0600'
+    eq sft(d, '%z'), '-0600'
     d.getTimezoneOffset = original
 
   it 'should return literal percent', () ->

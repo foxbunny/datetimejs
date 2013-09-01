@@ -91,11 +91,11 @@ describe('datetime.strftime', function() {
     d.getTimezoneOffset = function() {
       return -120;
     };
-    eq(sft(d, '%z'), '-0200');
+    eq(sft(d, '%z'), '+0200');
     d.getTimezoneOffset = function() {
       return 360;
     };
-    eq(sft(d, '%z'), '+0600');
+    eq(sft(d, '%z'), '-0600');
     return d.getTimezoneOffset = original;
   });
   it('should return literal percent', function() {
