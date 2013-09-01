@@ -32,11 +32,27 @@ define(function() {
     utils: {},
     datetime: {}
   };
-  dt.utils.zeroPad = zeroPad = function(i, digits) {
+  dt.utils.zeroPad = zeroPad = function(i, digits, tail) {
+    var f, _ref;
     if (digits == null) {
       digits = 3;
     }
-    return ((new Array(digits)).join('0') + i).slice(-digits);
+    if (tail == null) {
+      tail = false;
+    }
+    if (tail === false) {
+      return ((new Array(digits)).join('0') + i).slice(-digits);
+    } else {
+      _ref = i.toString().split('.'), i = _ref[0], f = _ref[1];
+      if (tail === 0) {
+        return zeroPad(i, digits - tail, false);
+      } else {
+        i = zeroPad(i, digits - 1 - tail, false);
+        f = zeroPad(f.split('').reverse().join(''), tail, false);
+        f = f.split('').reverse().join('');
+        return [i, f].join('.');
+      }
+    }
   };
   dt.utils.cycle = cycle = function(i, max, zeroIndex) {
     if (zeroIndex == null) {

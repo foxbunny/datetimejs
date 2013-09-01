@@ -33,20 +33,47 @@ define () ->
   # UTILITY METHODS
   #############################################################################
 
-  # ## `datetime.utils.zeroPad(i, [digits])`
+  # ## `datetime.utils.zeroPad(i, [digits, tail])`
   #
   # Zero-pads a number `i`.
   #
   # `digits` argument specifies the total number of digits. If omitted, it will
   # default to 3 for no particular reason. :)
   #
+  # If `tail` argument is specified, the number will be considered a float, and
+  # will zero-padded from the tail as well. The `tail` should be the number of
+  # fractional digits after the dot.
+  #
+  # Tail is `false` by default. If you pass it a 0, it will floor the number
+  # instead of not tailing, by removing the fractional part.
+  #
   # Example:
   #
   #     datetime.utils.zeroPad(12, 4);
   #     // returns '0012'
   #
-  dt.utils.zeroPad = zeroPad = (i, digits=3) ->
-    ((new Array digits).join('0') + i).slice -digits
+  #     datetime.utils.zeroPad(2.3, 5);
+  #     // 002.3
+  #
+  #     datetime.utils.zeroPad(2.3, 5, 0);
+  #     // 00002
+  #
+  #     datetime.utils.zeroPad(2.3, 5, 2);
+  #     // 02.30
+  #
+  dt.utils.zeroPad = zeroPad = (i, digits=3, tail=false) ->
+    if tail is false
+      ((new Array digits).join('0') + i).slice -digits
+    else
+      [i, f] = i.toString().split('.')
+      if tail is 0
+        zeroPad i, digits - tail, false
+      else
+        i = zeroPad i, digits - 1 -tail, false
+        f = zeroPad f.split('').reverse().join(''), tail, false
+        f = f.split('').reverse().join('')
+        [i, f].join('.')
+
 
   # ## `datetime.utils.cycle(i, max, [zeroIndex])`
   #
