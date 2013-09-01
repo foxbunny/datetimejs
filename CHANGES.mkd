@@ -1,5 +1,20 @@
 # DatetimeJS changelog
 
+## 0.2.0
+
+## Fixed previously broken `isBefore` and `isAfter`
+
+They had the opposite results. This has now been fixed, and it's a
+backwards-incompatible change.
+
+## Fixed failing tests on IE and FireFox
+
+The way Date objects were cloned by passing them to Date constructor was
+clearly not a very bright idea. It seems that on most browsers this causes the
+data object to be evaluated to a string or something similar, thus loosing  the
+millisecond bit. While  this was fine in some cases, it wasn't fine for the
+`#delta()` method.
+
 ## 0.1.0
 
 Apart from many bugfixes and additonal unit tests...
