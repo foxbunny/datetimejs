@@ -382,12 +382,6 @@ define(function() {
     d.setHours(0, 0, 0, 0);
     return d;
   };
-  dt.datetime.shiftTime = function(t) {
-    var d;
-    d = new Date(d);
-    d.setMilliseconds(d.getMilliseconds() + t);
-    return d;
-  };
   dt.datetime.toUTC = function(d) {
     return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds());
   };

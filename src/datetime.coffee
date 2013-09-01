@@ -438,14 +438,6 @@ define () ->
     d.setHours 0, 0, 0, 0
     d
 
-  # ## `datetime.datetime.shiftTime(t)`
-  #
-  # Shift the time `t` milliseconds.
-  dt.datetime.shiftTime = (t) ->
-    d = new Date d
-    d.setMilliseconds d.getMilliseconds() + t
-    d
-
   # ## `datetime.datetime.toUTC(d)
   #
   # This method will return a date and time as if it were UTC. Note, however,

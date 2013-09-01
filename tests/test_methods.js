@@ -85,17 +85,6 @@ describe('datetime.datetime', function() {
       return assert.equal(d.getMilliseconds(), 0);
     });
   });
-  describe('#shiftTime()', function() {
-    return it('should shift the time by 200ms', function() {
-      var d;
-      d = new Date(2013, 8, 1, 15, 0, 0, 100);
-      d = datetime.shiftTime(200);
-      assert.equal(d.getMilliseconds(), 300);
-      d = datetime.shiftTime(-200);
-      assert.equal(d.getMilliseconds(), 900);
-      return assert.equal(d.getSeconds(), 59);
-    });
-  });
   describe('#today()', function() {
     it('should be today', function() {
       var d1, d2;

@@ -69,15 +69,6 @@ describe 'datetime.datetime', () ->
       assert.equal d.getSeconds(), 0
       assert.equal d.getMilliseconds(), 0
 
-  describe '#shiftTime()', () ->
-    it 'should shift the time by 200ms', () ->
-      d = new Date 2013, 8, 1, 15, 0, 0, 100
-      d = datetime.shiftTime 200
-      assert.equal d.getMilliseconds(), 300
-      d = datetime.shiftTime -200
-      assert.equal d.getMilliseconds(), 900
-      assert.equal d.getSeconds(), 59
-
   describe '#today()', () ->
     it 'should be today', () ->
       d1 = new Date()
