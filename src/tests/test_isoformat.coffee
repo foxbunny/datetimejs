@@ -1,10 +1,10 @@
 # ISO format test
 
-assert = require 'assert'
-datetime = require '../datetime'
+if require?
+  chai = require 'chai'
+  datetime = require '../datetime'
 
-isoformat = datetime.isoformat
-isoparse = datetime.isoparse
+assert = chai.assert
 
 describe 'datetime', () ->
   describe '#isoformat()', () ->
@@ -12,7 +12,7 @@ describe 'datetime', () ->
       d = new Date(2013, 8, 1, 16)
       # Compensate for local timezone
       d.setMinutes d.getMinutes() - d.getTimezoneOffset()
-      assert.equal isoformat(d), '2013-09-01T16:00:00.00'
+      assert.equal datetime.isoformat(d), '2013-09-01T16:00:00.00'
 
   describe '#isoparse()', () ->
     it 'should parse date in ISO format', () ->

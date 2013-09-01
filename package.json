@@ -15,7 +15,8 @@
   "devDependencies": {
     "volo": "*",
     "coffee-script": "1.6.3",
-    "mocha": "*"
+    "mocha": "*",
+    "chai": "*"
   },
   "repository": {
     "type": "git",

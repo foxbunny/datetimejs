@@ -1,0 +1,27 @@
+<!doctype html>
+
+<html>
+    <head>
+        <title>DatetimeJS Tests</title>
+        <link rel="stylesheet" href="tools/mocha.css" />
+    </head>
+    <body>
+        <div id="mocha"></div>
+        <script src="tools/mocha.js"></script>
+        <script src="tools/chai.js"></script>
+        <script src="../datetime.js"></script>
+        <script>
+            mocha.setup('bdd');
+        </script>
+        <script src="test_utils.js"></script>
+        <script src="test_methods.js"></script>
+        <script src="test_formatting.js"></script>
+        <script src="test_isoformat.js"></script>
+        <script>
+            mocha.checkLeaks();
+            mocha.run();
+        </script>
+    </body>
+</html>
+
+

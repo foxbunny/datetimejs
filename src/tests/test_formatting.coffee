@@ -1,97 +1,98 @@
 # strftime formatting tests
 
-assert = require 'assert'
-datetime = require '../datetime'
+if require?
+  chai = require 'chai'
+  datetime = require '../datetime'
 
-eq = assert.equal
-sft = datetime.strftime
+assert = chai.assert
+
 d = new Date(2013, 8, 1, 18, 7, 8, 200)
 d1 = new Date(2013, 8, 1, 8, 7, 8, 200)
 
 describe 'datetime.strftime', () ->
   it 'should return the short week day name', () ->
-    eq sft(d, '%a'), 'Sun'
+    assert.equal datetime.strftime(d, '%a'), 'Sun'
 
   it 'should return the long week day name', () ->
-    eq sft(d, '%A'), 'Sunday'
+    assert.equal datetime.strftime(d, '%A'), 'Sunday'
 
   it 'should return the short month name', () ->
-    eq sft(d, '%b'), 'Sep'
+    assert.equal datetime.strftime(d, '%b'), 'Sep'
 
   it 'should return the long month name', () ->
-    eq sft(d, '%B'), 'September'
+    assert.equal datetime.strftime(d, '%B'), 'September'
 
   it 'should return the zero-padded date', () ->
-    eq sft(d, '%d'), '01'
+    assert.equal datetime.strftime(d, '%d'), '01'
 
   it 'should return the non-padded date', () ->
-    eq sft(d, '%D'), '1'
+    assert.equal datetime.strftime(d, '%D'), '1'
 
   it 'should return zero-padded seconds with fraction', () ->
-    eq sft(d, '%f'), '08.20'
+    assert.equal datetime.strftime(d, '%f'), '08.20'
 
   it 'should return zero-padded hours in 24-hour format', () ->
-    eq sft(d, '%H'), '18'
+    assert.equal datetime.strftime(d, '%H'), '18'
 
   it 'should return non-padded hours in 12-hour format', () ->
-    eq sft(d, '%i'), '6'
+    assert.equal datetime.strftime(d, '%i'), '6'
 
   it 'should return zero-padded hours in 12-hour format', () ->
-    eq sft(d, '%I'), '06'
+    assert.equal datetime.strftime(d, '%I'), '06'
 
   it 'should return zer-padded day of year', () ->
-    eq sft(d, '%j'), '244'
+    assert.equal datetime.strftime(d, '%j'), '244'
 
   it 'should return zero-padded numeric month', () ->
-    eq sft(d, '%m'), '09'
+    assert.equal datetime.strftime(d, '%m'), '09'
 
   it 'should return zero-padded minutes', () ->
-    eq sft(d, '%M'), '07'
+    assert.equal datetime.strftime(d, '%M'), '07'
 
   it 'should return non-padded month', () ->
-    eq sft(d, '%n'), '9'
+    assert.equal datetime.strftime(d, '%n'), '9'
 
   it 'should return non-padded minutes', () ->
-    eq sft(d, '%N'), '7'
+    assert.equal datetime.strftime(d, '%N'), '7'
 
   it 'should return PM', () ->
-    eq sft(d, '%p'), 'p.m.'
+    assert.equal datetime.strftime(d, '%p'), 'p.m.'
 
   it 'should return AM', () ->
     d.setHours 9
-    eq sft(d, '%p'), 'a.m.'
+    assert.equal datetime.strftime(d, '%p'), 'a.m.'
     d.setHours 18
 
   it 'should return non-padded seconds', () ->
-    eq sft(d, '%s'), '8'
+    assert.equal datetime.strftime(d, '%s'), '8'
 
   it 'should return padded seconds', () ->
-    eq sft(d, '%S'), '08'
+    assert.equal datetime.strftime(d, '%S'), '08'
 
   it 'should return miliseconds', () ->
-    eq sft(d, '%r'), '200'
+    assert.equal datetime.strftime(d, '%r'), '200'
 
   it 'should return numeric weed day', () ->
-    eq sft(d, '%w'), '0'
+    assert.equal datetime.strftime(d, '%w'), '0'
 
   it 'should return year without century', () ->
-    eq sft(d, '%y'), '13'
+    assert.equal datetime.strftime(d, '%y'), '13'
 
   it 'should return full year', () ->
-    eq sft(d, '%Y'), '2013'
+    assert.equal datetime.strftime(d, '%Y'), '2013'
 
   it 'should return timezone', () ->
     # We must mock the timezone method
     original = d.getTimezoneOffset
     d.getTimezoneOffset = () -> -120  # minus 2 hours
-    eq sft(d, '%z'), '+0200'
+    assert.equal datetime.strftime(d, '%z'), '+0200'
     d.getTimezoneOffset = () -> 360  # plus 6 hours
-    eq sft(d, '%z'), '-0600'
+    assert.equal datetime.strftime(d, '%z'), '-0600'
     d.getTimezoneOffset = original
 
   it 'should return literal percent', () ->
-    eq sft(d, '%%'), '%'
+    assert.equal datetime.strftime(d, '%%'), '%'
 
   it 'should retain non-formatting character', () ->
-    f = sft(d, 'The year is %Y, around %i %p on %B %D')
-    eq f, "The year is 2013, around 6 p.m. on September 1"
+    f = datetime.strftime(d, 'The year is %Y, around %i %p on %B %D')
+    assert.equal f, "The year is 2013, around 6 p.m. on September 1"
