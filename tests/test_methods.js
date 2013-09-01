@@ -15,7 +15,7 @@ if (typeof GLOBAL === "undefined" || GLOBAL === null) {
 assert = chai.assert;
 
 describe('datetime.datetime', function() {
-  describe('#clone()', function() {
+  describe('#clone', function() {
     it('should create identical version of date object', function() {
       var d, d1;
       d = new Date(2013, 8, 1);
@@ -29,7 +29,7 @@ describe('datetime.datetime', function() {
       return assert.notEqual(d1, d);
     });
   });
-  describe('#addDays()', function() {
+  describe('#addDays', function() {
     it('should add one day to date if passed date and 1', function() {
       var d;
       d = new Date(2013, 8, 1);
@@ -52,7 +52,7 @@ describe('datetime.datetime', function() {
       return assert.equal(d.getFullYear(), 2014);
     });
   });
-  describe('#addMonths()', function() {
+  describe('#addMonths', function() {
     it('should add one month if passed a date and 1', function() {
       var d;
       d = new Date(2013, 8, 1);
@@ -73,7 +73,7 @@ describe('datetime.datetime', function() {
       return assert.equal(d.getFullYear(), 2014);
     });
   });
-  describe('#addYears()', function() {
+  describe('#addYears', function() {
     it('should add a year if passed 1', function() {
       var d;
       d = new Date(2013, 0, 1);
@@ -95,7 +95,7 @@ describe('datetime.datetime', function() {
       return assert.equal(d.getFullYear(), 2013);
     });
   });
-  describe('#resetTime()', function() {
+  describe('#resetTime', function() {
     return it('should reset the time to 0', function() {
       var d;
       d = new Date(2013, 8, 1, 15, 22, 59, 333);
@@ -106,7 +106,7 @@ describe('datetime.datetime', function() {
       return assert.equal(d.getMilliseconds(), 0);
     });
   });
-  describe('#today()', function() {
+  describe('#today', function() {
     it('should be today', function() {
       var d1, d2;
       d1 = new Date();
@@ -124,7 +124,7 @@ describe('datetime.datetime', function() {
       return assert.equal(d.getMilliseconds(), 0);
     });
   });
-  describe('#thisMonth()', function() {
+  describe('#thisMonth', function() {
     it("should be this month's 1st", function() {
       var d1, d2;
       d1 = new Date();
@@ -142,7 +142,7 @@ describe('datetime.datetime', function() {
       return assert.equal(d.getMilliseconds(), 0);
     });
   });
-  describe('#thisWeek()', function() {
+  describe('#thisWeek', function() {
     it('should be this Sunday', function() {
       var date, nativeDate;
       nativeDate = Date;
@@ -175,7 +175,7 @@ describe('datetime.datetime', function() {
       return assert.equal(d.getMilliseconds(), 0);
     });
   });
-  describe('#delta()', function() {
+  describe('#delta', function() {
     it('should return an object with required properties', function() {
       var d1, d2, delta;
       d1 = d2 = new Date();
@@ -362,6 +362,18 @@ describe('datetime.datetime', function() {
       return assert.equal(delta.composite[3], 1, 'seconds');
     });
   });
+  describe('#reorder', function() {
+    return it('should return ordered dates', function() {
+      var d1, d2, d3, sorted;
+      d1 = new Date(2013, 8, 1);
+      d2 = new Date(2013, 8, 2);
+      d3 = new Date(2013, 8, 3);
+      sorted = datetime.datetime.reorder(d3, d1, d2);
+      assert.equal(d1, sorted[0]);
+      assert.equal(d2, sorted[1]);
+      return assert.equal(d3, sorted[2]);
+    });
+  });
   describe('#isBefore', function() {
     it('should basically work :)', function() {
       var neu, old;
@@ -377,7 +389,7 @@ describe('datetime.datetime', function() {
       return assert.notOk(datetime.datetime.isBefore(neu, old));
     });
   });
-  return describe('#isAfter', function() {
+  describe('#isAfter', function() {
     it('should basically work... again', function() {
       var neu, old;
       old = new Date(2013, 8, 1, 12, 0, 0, 0);
@@ -390,6 +402,77 @@ describe('datetime.datetime', function() {
       old = neu = new Date(2013, 8, 1, 12, 0, 0, 0);
       assert.notOk(datetime.datetime.isAfter(old, neu));
       return assert.notOk(datetime.datetime.isAfter(neu, old));
+    });
+  });
+  describe('#isBetwen', function() {
+    it('should return true when date is between two dates', function() {
+      var d1, d2, d3;
+      d1 = new Date(2013, 8, 1);
+      d2 = new Date(2013, 8, 2);
+      d3 = new Date(2013, 8, 3);
+      return assert.ok(datetime.datetime.isBetween(d2, d1, d3));
+    });
+    it("should't care about order of the two extremes", function() {
+      var d1, d2, d3;
+      d1 = new Date(2013, 8, 1);
+      d2 = new Date(2013, 8, 2);
+      d3 = new Date(2013, 8, 3);
+      return assert.ok(datetime.datetime.isBetween(d2, d3, d1));
+    });
+    it("should return false if middle date matches an extereme", function() {
+      var d1, d2, d3;
+      d1 = new Date(2013, 8, 1);
+      d2 = d3 = new Date(2013, 8, 2);
+      return assert.notOk(datetime.datetime.isBetween(d2, d1, d3));
+    });
+    return it("should return false if date is outside extremes", function() {
+      var d1, d2, d3;
+      d1 = new Date(2013, 8, 1);
+      d2 = new Date(2013, 8, 2);
+      d3 = new Date(2013, 8, 3);
+      return assert.notOk(datetime.datetime.isBetween(d1, d2, d3));
+    });
+  });
+  describe('#isDateBefore', function() {
+    it('should return false if only times differ', function() {
+      var neu, old;
+      old = new Date(2013, 8, 1, 5);
+      neu = new Date(2013, 8, 1, 12);
+      assert.notOk(datetime.datetime.isDateBefore(old, neu));
+      return assert.notOk(datetime.datetime.isDateBefore(neu, old));
+    });
+    it('should return false if if date is after', function() {
+      var neu, old;
+      old = new Date(2013, 8, 1);
+      neu = new Date(2013, 8, 2);
+      return assert.notOk(datetime.datetime.isDateBefore(neu, old));
+    });
+    return it('should return true if date is before', function() {
+      var neu, old;
+      old = new Date(2013, 8, 1);
+      neu = new Date(2013, 8, 2);
+      return assert.ok(datetime.datetime.isDateBefore(old, neu));
+    });
+  });
+  return describe('#isDateAfter', function() {
+    it('should return false if only times differ', function() {
+      var neu, old;
+      old = new Date(2013, 8, 1, 5);
+      neu = new Date(2013, 8, 1, 12);
+      assert.notOk(datetime.datetime.isDateAfter(neu, old));
+      return assert.notOk(datetime.datetime.isDateAfter(old, neu));
+    });
+    it('should return false if date is before', function() {
+      var neu, old;
+      old = new Date(2013, 8, 1);
+      neu = new Date(2013, 8, 2);
+      return assert.notOk(datetime.datetime.isDateAfter(old, neu));
+    });
+    return it('should return true if date is after', function() {
+      var neu, old;
+      old = new Date(2013, 8, 1);
+      neu = new Date(2013, 8, 2);
+      return assert.ok(datetime.datetime.isDateAfter(neu, old));
     });
   });
 });

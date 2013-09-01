@@ -12,7 +12,7 @@ else
 assert = chai.assert
 
 describe 'datetime.datetime', () ->
-  describe '#clone()', () ->
+  describe '#clone', () ->
     it 'should create identical version of date object', () ->
       d = new Date 2013, 8, 1
       d1 = datetime.datetime.clone d
@@ -23,7 +23,7 @@ describe 'datetime.datetime', () ->
       d1 = datetime.datetime.clone d
       assert.notEqual d1, d
 
-  describe '#addDays()', () ->
+  describe '#addDays', () ->
     it 'should add one day to date if passed date and 1', () ->
       d = new Date 2013, 8, 1
       d = datetime.datetime.addDays d, 1
@@ -42,7 +42,7 @@ describe 'datetime.datetime', () ->
       assert.equal d.getMonth(), 0
       assert.equal d.getFullYear(), 2014
 
-  describe '#addMonths()', () ->
+  describe '#addMonths', () ->
     it 'should add one month if passed a date and 1', () ->
       d = new Date 2013, 8, 1
       d = datetime.datetime.addMonths d, 1
@@ -59,7 +59,7 @@ describe 'datetime.datetime', () ->
       assert.equal d.getMonth(), 0
       assert.equal d.getFullYear(), 2014
 
-  describe '#addYears()', () ->
+  describe '#addYears', () ->
     it 'should add a year if passed 1', () ->
       d = new Date 2013, 0, 1
       d = datetime.datetime.addYears d, 1
@@ -77,7 +77,7 @@ describe 'datetime.datetime', () ->
       assert.equal d.getMonth(), 2
       assert.equal d.getFullYear(), 2013
 
-  describe '#resetTime()', () ->
+  describe '#resetTime', () ->
     it 'should reset the time to 0', () ->
       d = new Date 2013, 8, 1, 15, 22, 59, 333
       d = datetime.datetime.resetTime d
@@ -86,7 +86,7 @@ describe 'datetime.datetime', () ->
       assert.equal d.getSeconds(), 0
       assert.equal d.getMilliseconds(), 0
 
-  describe '#today()', () ->
+  describe '#today', () ->
     it 'should be today', () ->
       d1 = new Date()
       d2 = datetime.datetime.today()
@@ -101,7 +101,7 @@ describe 'datetime.datetime', () ->
       assert.equal d.getSeconds(), 0
       assert.equal d.getMilliseconds(), 0
 
-  describe '#thisMonth()', () ->
+  describe '#thisMonth', () ->
     it "should be this month's 1st", () ->
       d1 = new Date()
       d2 = datetime.datetime.thisMonth()
@@ -116,7 +116,7 @@ describe 'datetime.datetime', () ->
       assert.equal d.getSeconds(), 0
       assert.equal d.getMilliseconds(), 0
 
-  describe '#thisWeek()', () ->
+  describe '#thisWeek', () ->
     it 'should be this Sunday', () ->
       nativeDate = Date
 
@@ -143,7 +143,7 @@ describe 'datetime.datetime', () ->
       assert.equal d.getSeconds(), 0
       assert.equal d.getMilliseconds(), 0
 
-  describe '#delta()', () ->
+  describe '#delta', () ->
     it 'should return an object with required properties', () ->
       d1 = d2 = new Date()
       delta = datetime.datetime.delta d1, d2
@@ -305,6 +305,16 @@ describe 'datetime.datetime', () ->
       assert.equal delta.composite[3], 1, 'seconds'
       # We do not compare milliseconds due to rounding errors
 
+  describe '#reorder', () ->
+    it 'should return ordered dates', () ->
+      d1 = new Date 2013, 8, 1
+      d2 = new Date 2013, 8, 2
+      d3 = new Date 2013, 8, 3
+      sorted = datetime.datetime.reorder d3, d1, d2
+      assert.equal d1, sorted[0]
+      assert.equal d2, sorted[1]
+      assert.equal d3, sorted[2]
+
   describe '#isBefore', () ->
     it 'should basically work :)', () ->
       old = new Date 2013, 8, 1, 12, 0, 0, 0
@@ -328,4 +338,63 @@ describe 'datetime.datetime', () ->
       old = neu = new Date 2013, 8, 1, 12, 0, 0, 0
       assert.notOk datetime.datetime.isAfter old, neu
       assert.notOk datetime.datetime.isAfter neu, old
+
+  describe '#isBetwen', () ->
+    it 'should return true when date is between two dates', () ->
+      d1 = new Date 2013, 8, 1
+      d2 = new Date 2013, 8, 2
+      d3 = new Date 2013, 8, 3
+      assert.ok datetime.datetime.isBetween d2, d1, d3
+
+    it "should't care about order of the two extremes", () ->
+      d1 = new Date 2013, 8, 1
+      d2 = new Date 2013, 8, 2
+      d3 = new Date 2013, 8, 3
+      assert.ok datetime.datetime.isBetween d2, d3, d1
+
+    it "should return false if middle date matches an extereme", () ->
+      d1 = new Date 2013, 8, 1
+      d2 = d3 = new Date 2013, 8, 2
+      assert.notOk datetime.datetime.isBetween d2, d1, d3
+
+    it "should return false if date is outside extremes", () ->
+      d1 = new Date 2013, 8, 1
+      d2 = new Date 2013, 8, 2
+      d3 = new Date 2013, 8, 3
+      assert.notOk datetime.datetime.isBetween d1, d2, d3
+
+  describe '#isDateBefore', () ->
+    it 'should return false if only times differ', () ->
+      old = new Date 2013, 8, 1, 5
+      neu = new Date 2013, 8, 1, 12
+      assert.notOk datetime.datetime.isDateBefore old, neu
+      assert.notOk datetime.datetime.isDateBefore neu, old
+
+    it 'should return false if if date is after', () ->
+      old = new Date 2013, 8, 1
+      neu = new Date 2013, 8, 2
+      assert.notOk datetime.datetime.isDateBefore neu, old
+
+    it 'should return true if date is before', () ->
+      old = new Date 2013, 8, 1
+      neu = new Date 2013, 8, 2
+      assert.ok datetime.datetime.isDateBefore old, neu
+
+  describe '#isDateAfter', () ->
+    it 'should return false if only times differ', () ->
+      old = new Date 2013, 8, 1, 5
+      neu = new Date 2013, 8, 1, 12
+      assert.notOk datetime.datetime.isDateAfter neu, old
+      assert.notOk datetime.datetime.isDateAfter old, neu
+
+    it 'should return false if date is before', () ->
+      old = new Date 2013, 8, 1
+      neu = new Date 2013, 8, 2
+      assert.notOk datetime.datetime.isDateAfter old, neu
+
+    it 'should return true if date is after', () ->
+      old = new Date 2013, 8, 1
+      neu = new Date 2013, 8, 2
+      assert.ok datetime.datetime.isDateAfter neu, old
+
 
