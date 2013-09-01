@@ -1,3 +1,8 @@
+###!
+@author Branko Vukelic <branko@brankovukelic.com>
+@license MIT
+###
+
 # # Date and time formatting library
 #
 # This library provides a strftime-compatible API for formatting dates and time
