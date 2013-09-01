@@ -349,7 +349,7 @@ define(function() {
         fn: function(s, meta) {
           var h, m, mult;
           if (s === 'Z') {
-            return meta.timezone = 'UTC';
+            return meta.timezone = 0;
           } else {
             mult = s[0] === '-' ? -1 : 1;
             h = parseInt(s.slice(1, 3), 10);
@@ -378,7 +378,7 @@ define(function() {
     return d;
   };
   dt.datetime.resetTime = function(d) {
-    new Date(d);
+    d = new Date(d);
     d.setHours(0, 0, 0, 0);
     return d;
   };
@@ -484,7 +484,7 @@ define(function() {
     return format;
   };
   dt.strptime = function(s, format) {
-    var converters, fn, idx, matches, meta, rxp, schr, _i, _j, _len, _len1;
+    var converters, d, fn, idx, localOffset, matches, meta, offset, rxp, schr, _i, _j, _len, _len1;
     rxp = format.replace(/\\/, '\\\\');
     for (_i = 0, _len = REGEXP_CHARS.length; _i < _len; _i++) {
       schr = REGEXP_CHARS[_i];
@@ -511,13 +511,20 @@ define(function() {
       minute: 0,
       second: 0,
       millisecond: 0,
-      timeAdjust: false
+      timeAdjust: false,
+      timezone: null
     };
     for (idx = _j = 0, _len1 = converters.length; _j < _len1; idx = ++_j) {
       fn = converters[idx];
       fn(matches[idx], meta);
     }
-    return new Date(meta.year, meta.month, meta.date, (meta.timeAdjust ? hour24(meta.hour) : meta.hour), meta.minute, meta.second, meta.millisecond);
+    d = new Date(meta.year, meta.month, meta.date, (meta.timeAdjust ? hour24(meta.hour) : meta.hour), meta.minute, meta.second, meta.millisecond);
+    if (meta.timezone != null) {
+      localOffset = d.getTimezoneOffset();
+      offset = (localOffset - meta.timezone) * 60 * 1000;
+      d = dt.datetime.shiftTime(offset);
+    }
+    return d;
   };
   return dt;
 });

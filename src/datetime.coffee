@@ -388,7 +388,7 @@ define () ->
       re: '[+-](?1[01]|0\\d)[0-5]\\d|Z'
       fn: (s, meta) ->
         if s is 'Z'
-          meta.timezone = 'UTC'
+          meta.timezone = 0
         else
           mult = if s[0] is '-' then -1 else 1
           h = parseInt s[1..2], 10
@@ -434,7 +434,7 @@ define () ->
   #
   # Reset the time part (hours, minutes, seconds, and milliseconds to 0).
   dt.datetime.resetTime = (d) ->
-    new Date d
+    d = new Date d
     d.setHours 0, 0, 0, 0
     d
 
@@ -724,19 +724,31 @@ define () ->
       second: 0
       millisecond: 0
       timeAdjust: false
+      timezone: null
 
     # Iterate parser functions and apply the function to each match
     for fn, idx in converters
       fn matches[idx], meta
 
     # Create the `Date` object using meta data
-    new Date meta.year,
+    d = new Date meta.year,
       meta.month,
       meta.date,
       (if meta.timeAdjust then hour24(meta.hour) else meta.hour),
       meta.minute,
       meta.second,
       meta.millisecond
+
+    if meta.timezone?
+      # Determine the relative offset of the original time to local time of
+      # the platform.
+      localOffset = d.getTimezoneOffset()
+      # We need to shift the time by the difference of timezone and local
+      # zone
+      offset = (localOffset - meta.timezone) * 60 * 1000  # in ms
+      d = dt.datetime.shiftTime offset
+
+    d
 
   dt
 
