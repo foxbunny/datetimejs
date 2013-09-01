@@ -1,0 +1,92 @@
+# DatetimeJS
+
+This is a shameless (or perhaps shameful) imitation of Python's
+[datetime](http://docs.python.org/2/library/datetime.html) library for
+JavaScript. It provides methods for creating, comparing, formatting and parsing
+dates and times.
+
+## Motivation
+
+This library existed a bit longer than it may seem from commit logs and other
+information. It has been sitting on my hard drive much longer than some of the
+other libraries out there that provide things like strftime formatting.
+Unfortunately, I have not released it until now because I was rather busy with
+other things. It just so happened that I had time on my hands, so I decided to
+polish and release this.
+
+Another reason is that I have started to use MomentJS, and I hated it with
+passion. There are many reasons why strftime formatting is great, and habit is
+not even the first reason that comes to mind. Without going further into
+philosophical discussion, I consider strftime formatting to be superior and I
+want to use it in JavaScript. Period.
+
+## Installation
+
+The `datetime.js` module is in UMD format, and it is usable in both the
+browsers and NodeJS. It has no external dependencies.
+
+This module is currently not released on NPM, so please hold on while that is
+sorted out.
+
+For browsers, you can simply add it using a `<script>` tag or `require` it as 
+you normally do if you use RequireJS and similar AMD loaders.
+
+## Basic usage
+
+Since the juicy bit is strftime formatting, let's see an example of that first.
+
+    var dt = require('datetime');  // if you need to
+    var date = new Date(2014, 4, 12, 14, 0, 0);
+    dt.strftime(date, 'The year is %Y, around %i %p on %b %d');
+    // returns 'The year is 2014, around 2 p.m. on May 12'
+
+Ideally, we would be able parse using the same formatting string and the result
+we've got from `#strftime()`, but that's just not possible right now. So we'll
+go easy with a slightly more reasonable example.
+
+    date = '9/2/2013 11:45 a.m.'
+    dt.strptime(date, '%n/%D/%Y %i:%M %p');
+    // Returns Date object for Mon Sep 02 2013 11:45:00
+
+But formatting and parsing isn't all. How about finding out the difference in
+time between two `Date` objects?
+
+    // Wrapping it in immmediate-execution for people who are 
+    // trying this in a shell.
+    (function() {
+        date = new Date();
+        setTimeout(function() {
+            var date1 = new Date();
+            var delta = dt.datetime.delta(date, date1)
+            console.log('Took me ' + delta.seconds + ' seconds');    
+        }, 5400);
+    }());
+    // Will eventually print 'Took me 6 seconds'
+
+Or maybe you don't need an exact delta. You only need to know if something is
+before or after?
+
+    var date = new Date(2013, 6, 12);
+    var date1 = new Date(2013, 6, 15);
+    dt.datetime.isAfter(date, date1); // false
+    dt.datetime.isBefore(date, date1); // true
+
+Sorting dates is also quite easy:
+
+    dt.datetime.reorder(
+        new Date(2013, 6, 12),
+        new Date(2013, 4, 10),
+        new Date(2013, 5, 15)
+    );
+    // returns [Date(2013, 4, 10), Date(2013, 5, 15), Date(2013, 6, 12)]
+
+## API documentation
+
+Yes, on TODO list. Meanwhile, look at the CoffeeScript source in the `src`
+directory (no, really, just read the comments, even if you don't know any
+CoffeeScript).
+
+## Reporting bugs
+
+Report all your issues (related to this library, of course) to the [GitHub
+issue tracker](https://github.com/foxbunny/datetimejs/issues).

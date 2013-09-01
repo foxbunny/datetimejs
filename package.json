@@ -1,0 +1,32 @@
+{
+  "name" : "datetimejs",
+  "description" : "Library for manipulating, formatting, and parsing dates and times",
+  "homepage" : "https://github.com/foxbunny/datetimejs/",
+  "keywords" : ["date", "time", "strftime", "strptime", "formatting", "server", "browser"],
+  "author" : "Branko Vukelic <branko@brankovukelic.com>",
+  "bugs": {
+    "url": "https://github.com/foxbunny/datetimejs/issues",
+    "email": "branko@brankovukelic.com"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/foxbunny/datetimejs/blob/master/LICENSE"
+  },
+  "devDependencies": {
+    "volo": "*",
+    "coffee-script": "1.6.3",
+    "mocha", "*"
+  },
+  "main": "datetime.js",
+  "volo": {
+    "ignore": [
+      "package.json",
+      ".gitignore",
+      "README.md",
+      "LICENSE",
+      "volofile",
+      "src"
+    ]
+  },
+  "version" : "0.0.1"
+}
