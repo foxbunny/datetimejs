@@ -1,0 +1,19 @@
+# DatetimeJS changelog
+
+## 0.1.0
+
+Apart from many bugfixes and additonal unit tests...
+
+## `zeroPad` API change
+
+The zeroPad now takes one extra argument `tail`, which allows padding from the
+tail end of float numbers.
+
+## `datetime.isoformat` and `datetime.isoparse`
+
+Format and parse date and time using ISO format '%Y-%m-%dT%H:%M:%f'
+
+## Addition of %f formatting and parsing token
+
+This token will return seconds with a fractional part, zero-padded and two
+tail-padded float digits.
