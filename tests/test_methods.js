@@ -15,6 +15,20 @@ if (typeof GLOBAL === "undefined" || GLOBAL === null) {
 assert = chai.assert;
 
 describe('datetime.datetime', function() {
+  describe('#clone()', function() {
+    it('should create identical version of date object', function() {
+      var d, d1;
+      d = new Date(2013, 8, 1);
+      d1 = datetime.datetime.clone(d);
+      return assert.equal(d1 - d, 0);
+    });
+    return it('should create distinct instances', function() {
+      var d, d1;
+      d = new Date(2013, 8, 1);
+      d1 = datetime.datetime.clone(d);
+      return assert.notEqual(d1, d);
+    });
+  });
   describe('#addDays()', function() {
     it('should add one day to date if passed date and 1', function() {
       var d;
@@ -161,7 +175,7 @@ describe('datetime.datetime', function() {
       return assert.equal(d.getMilliseconds(), 0);
     });
   });
-  return describe('#delta()', function() {
+  describe('#delta()', function() {
     it('should return an object with required properties', function() {
       var d1, d2, delta;
       d1 = d2 = new Date();
@@ -346,6 +360,36 @@ describe('datetime.datetime', function() {
       assert.equal(delta.composite[1], 1, 'hours');
       assert.equal(delta.composite[2], 1, 'minutes');
       return assert.equal(delta.composite[3], 1, 'seconds');
+    });
+  });
+  describe('#isBefore', function() {
+    it('should basically work :)', function() {
+      var neu, old;
+      old = new Date(2013, 8, 1, 12, 0, 0, 0);
+      neu = new Date(2013, 8, 1, 12, 1, 0, 0);
+      assert.ok(datetime.datetime.isBefore(old, neu));
+      return assert.notOk(datetime.datetime.isBefore(neu, old));
+    });
+    return it('should return false when dates are equal', function() {
+      var neu, old;
+      old = neu = new Date(2013, 8, 1, 12, 0, 0, 0);
+      assert.notOk(datetime.datetime.isBefore(old, neu));
+      return assert.notOk(datetime.datetime.isBefore(neu, old));
+    });
+  });
+  return describe('#isAfter', function() {
+    it('should basically work... again', function() {
+      var neu, old;
+      old = new Date(2013, 8, 1, 12, 0, 0, 0);
+      neu = new Date(2013, 8, 1, 12, 1, 0, 0);
+      assert.notOk(datetime.datetime.isAfter(old, neu));
+      return assert.ok(datetime.datetime.isAfter(neu, old));
+    });
+    return it('should return false if dates are equal', function() {
+      var neu, old;
+      old = neu = new Date(2013, 8, 1, 12, 0, 0, 0);
+      assert.notOk(datetime.datetime.isAfter(old, neu));
+      return assert.notOk(datetime.datetime.isAfter(neu, old));
     });
   });
 });

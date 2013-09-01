@@ -362,23 +362,26 @@ define(function() {
     }
   };
   dt.ISO_FORMAT = '%Y-%m-%dT%H:%M:%f';
+  dt.datetime.clone = function(d) {
+    return new Date(d.getTime());
+  };
   dt.datetime.addDays = function(d, v) {
-    d = new Date(d.getTime());
+    d = this.clone(d);
     d.setDate(d.getDate() + v);
     return d;
   };
   dt.datetime.addMonths = function(d, v) {
-    d = new Date(d.getTime());
+    d = this.clone(d);
     d.setMonth(d.getMonth() + v);
     return d;
   };
   dt.datetime.addYears = function(d, v) {
-    d = new Date(d.getTime());
+    d = this.clone(d);
     d.setFullYear(d.getFullYear() + v);
     return d;
   };
   dt.datetime.resetTime = function(d) {
-    d = new Date(d.getTime());
+    d = this.clone(d);
     d.setHours(0, 0, 0, 0);
     return d;
   };
@@ -405,8 +408,8 @@ define(function() {
   };
   dt.datetime.delta = function(d1, d2) {
     var absD, days, delta, hrs, mins, msecs, secs;
-    d1 = new Date(d1.getTime());
-    d2 = new Date(d2.getTime());
+    d1 = this.clone(d1);
+    d2 = this.clone(d2);
     delta = d2 - d1;
     absD = Math.abs(delta);
     days = absD / 1000 / 60 / 60 / 24;
@@ -425,10 +428,10 @@ define(function() {
     };
   };
   dt.datetime.isBefore = function(d, d1) {
-    return this.delta(d, d1).delta < 0;
+    return this.delta(d, d1).delta > 0;
   };
   dt.datetime.isAfter = function(d, d1) {
-    return this.delta(d, d1).delta > 0;
+    return this.delta(d, d1).delta < 0;
   };
   dt.datetime.reorder = function() {
     var d;
@@ -462,7 +465,7 @@ define(function() {
     return this.isDateAfter(d, d1) && this.isDateBefore(d, d2);
   };
   dt.datetime.isLeapYear = function(d) {
-    d = new Date(d.getTime());
+    d = this.clone(d);
     d.setMonth(1);
     d.setDate(29);
     return d.getDate() === 29;

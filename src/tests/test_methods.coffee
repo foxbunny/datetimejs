@@ -12,6 +12,17 @@ else
 assert = chai.assert
 
 describe 'datetime.datetime', () ->
+  describe '#clone()', () ->
+    it 'should create identical version of date object', () ->
+      d = new Date 2013, 8, 1
+      d1 = datetime.datetime.clone d
+      assert.equal d1 - d, 0
+
+    it 'should create distinct instances', () ->
+      d = new Date 2013, 8, 1
+      d1 = datetime.datetime.clone d
+      assert.notEqual d1, d
+
   describe '#addDays()', () ->
     it 'should add one day to date if passed date and 1', () ->
       d = new Date 2013, 8, 1
@@ -293,3 +304,28 @@ describe 'datetime.datetime', () ->
       assert.equal delta.composite[2], 1, 'minutes'
       assert.equal delta.composite[3], 1, 'seconds'
       # We do not compare milliseconds due to rounding errors
+
+  describe '#isBefore', () ->
+    it 'should basically work :)', () ->
+      old = new Date 2013, 8, 1, 12, 0, 0, 0
+      neu = new Date 2013, 8, 1, 12, 1, 0, 0
+      assert.ok datetime.datetime.isBefore old, neu
+      assert.notOk datetime.datetime.isBefore neu, old
+
+    it 'should return false when dates are equal', () ->
+      old = neu = new Date 2013, 8, 1, 12, 0, 0, 0
+      assert.notOk datetime.datetime.isBefore old, neu
+      assert.notOk datetime.datetime.isBefore neu, old
+
+  describe '#isAfter', () ->
+    it 'should basically work... again', () ->
+      old = new Date 2013, 8, 1, 12, 0, 0, 0
+      neu = new Date 2013, 8, 1, 12, 1, 0, 0
+      assert.notOk datetime.datetime.isAfter old, neu
+      assert.ok datetime.datetime.isAfter neu, old
+
+    it 'should return false if dates are equal', () ->
+      old = neu = new Date 2013, 8, 1, 12, 0, 0, 0
+      assert.notOk datetime.datetime.isAfter old, neu
+      assert.notOk datetime.datetime.isAfter neu, old
+

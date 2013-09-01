@@ -403,12 +403,19 @@ define () ->
   # `datetime` SUBMODULE (the business end)
   #############################################################################
 
+  # ## `datetetime.datetime.clone(d)`
+  #
+  # Clones the `Date` object `d`, and returns a brand new instance.
+  dt.datetime.clone = (d) ->
+    new Date d.getTime()
+
+
   # ## `datetime.datetime.addDays(d, v)`
   #
   # Add `v` number of days to `d` and return the new date. `v` can be either a
   # positive or negative integer, or 0.
   dt.datetime.addDays = (d, v) ->
-    d = new Date d.getTime()
+    d = @clone d
     d.setDate d.getDate() + v
     d
 
@@ -417,7 +424,7 @@ define () ->
   # Add `v` number of months to `d`. `v` can be either a postiive or negative
   # integer, or 0.
   dt.datetime.addMonths = (d, v) ->
-    d = new Date d.getTime()
+    d = @clone d
     d.setMonth d.getMonth() + v
     d
 
@@ -426,7 +433,7 @@ define () ->
   # Add `v` number of years to `d`. `v` can be either a positive or negative
   # integer, or 0
   dt.datetime.addYears = (d, v) ->
-    d = new Date d.getTime()
+    d = @clone d
     d.setFullYear d.getFullYear() + v
     d
 
@@ -434,7 +441,7 @@ define () ->
   #
   # Reset the time part (hours, minutes, seconds, and milliseconds to 0).
   dt.datetime.resetTime = (d) ->
-    d = new Date d.getTime()
+    d = @clone d
     d.setHours 0, 0, 0, 0
     d
 
@@ -504,8 +511,8 @@ define () ->
   # that each individual key is a _total_ difference in given units, while the
   # composite is only total when you add up the individual components.
   dt.datetime.delta = (d1, d2) ->
-    d1 = new Date d1.getTime()
-    d2 = new Date d2.getTime()
+    d1 = @clone d1
+    d2 = @clone d2
     delta = d2 - d1  # absolute delta in ms
     absD = Math.abs delta
 
@@ -538,7 +545,7 @@ define () ->
   # Note that here, `#isBefore()` is _not_ strictly the opposite of
   # `#isAfter()` becuase objects could also be equal.
   dt.datetime.isBefore = (d, d1) ->
-    @delta(d, d1).delta < 0
+    @delta(d, d1).delta > 0
 
   # ## `datetime.datetime.isAfter(d, d1)`
   #
@@ -547,7 +554,7 @@ define () ->
   # Note that here, `#isAfter()` is _not_ strictly the opposite of
   # `#isBefore()` becuase objects could also be equal.
   dt.datetime.isAfter = (d, d1) ->
-    @delta(d, d1).delta > 0
+    @delta(d, d1).delta < 0
 
   # ## `datetime.datetime.reorder(d, [d1, d2...])
   #
@@ -599,7 +606,7 @@ define () ->
   #
   # Returns `true` if the `d` is in leap year
   dt.datetime.isLeapYear = (d) ->
-    d = new Date d.getTime()
+    d = @clone d
     d.setMonth 1
     d.setDate 29
     # This is a little hack that depends on how the `Date` constructor works in
