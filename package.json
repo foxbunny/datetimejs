@@ -27,6 +27,7 @@
   "main": "datetime.js",
   "volo": {
     "ignore": [
+      "tests",
       "package.json",
       ".gitignore",
       "README.md",
