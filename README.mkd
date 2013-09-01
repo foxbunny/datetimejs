@@ -25,11 +25,16 @@ want to use it in JavaScript. Period.
 The `datetime.js` module is in UMD format, and it is usable in both the
 browsers and NodeJS. It has no external dependencies.
 
-This module is currently not released on NPM, so please hold on while that is
-sorted out.
+On Node, you can install using NPM:
+
+    npm install datetimejs
 
 For browsers, you can simply add it using a `<script>` tag or `require` it as 
 you normally do if you use RequireJS and similar AMD loaders.
+
+It is also installable with [volo](http://volojs.org/):
+
+    volo add foxbunny/datetimejs
 
 ## Basic usage
 
