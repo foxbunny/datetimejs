@@ -47,6 +47,7 @@ define(function() {
       if (tail === 0) {
         return zeroPad(i, digits - tail, false);
       } else {
+        f || (f = '0');
         i = zeroPad(i, digits - 1 - tail, false);
         f = zeroPad(f.split('').reverse().join(''), tail, false);
         f = f.split('').reverse().join('');

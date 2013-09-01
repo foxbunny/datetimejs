@@ -69,6 +69,7 @@ define () ->
       if tail is 0
         zeroPad i, digits - tail, false
       else
+        f or= '0'
         i = zeroPad i, digits - 1 -tail, false
         f = zeroPad f.split('').reverse().join(''), tail, false
         f = f.split('').reverse().join('')

@@ -34,11 +34,14 @@ describe('datetime.utils', function() {
       s = utils.zeroPad(f, 5, 0);
       return assert.equal(s, '00002');
     });
-    return it('should account for floating digits if told to tail', function() {
+    it('should account for floating digits if told to tail', function() {
       var f, s;
       f = 2.5;
       s = utils.zeroPad(f, 5, 2);
       return assert.equal(s, '02.50');
+    });
+    return it('should handle a 0 normally', function() {
+      return assert.equal(utils.zeroPad(0, 5, 2), '00.00');
     });
   });
 });

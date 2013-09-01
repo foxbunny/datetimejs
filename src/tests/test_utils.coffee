@@ -33,3 +33,6 @@ describe 'datetime.utils', () ->
       s = utils.zeroPad f, 5, 2
       assert.equal s, '02.50'
 
+    it 'should handle a 0 normally', () ->
+      assert.equal utils.zeroPad(0, 5, 2), '00.00'
+
