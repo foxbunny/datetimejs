@@ -15,7 +15,14 @@
   "devDependencies": {
     "volo": "*",
     "coffee-script": "1.6.3",
-    "mocha", "*"
+    "mocha": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foxbunny/datetimejs.git"
+  },
+  "engines": {
+    "node": ">= 0.4.1"
   },
   "main": "datetime.js",
   "volo": {
