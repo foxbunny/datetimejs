@@ -144,7 +144,8 @@ describe('datetime.datetime', function() {
           setDate: function(d) {
             return date = d;
           },
-          setHours: function() {}
+          setHours: function() {},
+          getTime: function() {}
         };
       };
       datetime.datetime.thisWeek();

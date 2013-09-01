@@ -107,20 +107,18 @@ describe 'datetime.datetime', () ->
 
   describe '#thisWeek()', () ->
     it 'should be this Sunday', () ->
-      # We'll mock the global Date object
       nativeDate = Date
 
       # This vars will hold values thrown at Date methods
       date = null
 
+      # We'll mock the global Date object
       root.Date = () ->
-        getDay: () ->
-          4  # Thursday
-        getDate: () ->
-          10
-        setDate: (d) ->
-          date = d
+        getDay: () -> 4  # Thursday
+        getDate: () -> 10
+        setDate: (d) -> date = d
         setHours: () ->
+        getTime: () ->
 
       datetime.datetime.thisWeek()
       assert.equal date, 6  # date of 10 adjusted by -4
