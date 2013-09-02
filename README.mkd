@@ -91,7 +91,20 @@ Yes, on TODO list. Meanwhile, look at the CoffeeScript source in the `src`
 directory (no, really, just read the comments, even if you don't know any
 CoffeeScript).
 
+## Running unit tests
+
+For in-browser testing, simply open the `index.html` located in the `tests`
+directory. 
+
+For NodeJS, run:
+
+    mocha tests/*.js
+
 ## Reporting bugs
+
+Before reporting a bug, please make sure all tests are passing. If tests are
+not passing, please include information about failing tests with your bug
+report, even if it doesn't seem relevant.
 
 Report all your issues (related to this library, of course) to the [GitHub
 issue tracker](https://github.com/foxbunny/datetimejs/issues).
