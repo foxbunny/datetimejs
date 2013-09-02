@@ -1,5 +1,27 @@
 # DatetimeJS changelog
 
+## 0.3.0
+
+This release is not backwards compatible.
+
+### The `#delta()` and time/date-difference-related methods are moved
+
+They are now in `datetime.dtdelta` submodule.
+
+### `parse` and `format` submodules
+
+New `parse` and `format` submodules are now available. `strptime`, `strftime`,
+`isoparse` and `isoformat` are now aliases for methods in those submodules.
+
+### Test suite nearing completion
+
+New tests were added and bugs squatted.
+
+### New variables exposed
+
+`DAY_MS`, `REGEXP_CHARS`, and `PARSE_TOKEN_RE` are now exposed, although some
+of them are not overridable.
+
 ## 0.2.0
 
 ## Fixed previously broken `isBefore` and `isAfter`
