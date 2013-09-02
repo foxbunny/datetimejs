@@ -39,7 +39,7 @@ philosophical discussion, I consider strftime formatting to be superior and I
 want to use it in JavaScript. Period.
 
 
-## Installation <a name="installation></a>
+## Installation <a name="installation"></a>
 
 The `datetime.js` module is in UMD format, and it is usable in both the
 browsers and NodeJS. It has no external dependencies.
