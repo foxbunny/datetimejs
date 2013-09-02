@@ -126,18 +126,18 @@ define () ->
   #
   # Array of regexp characters that should be escaped in a format string when
   # parsing dates and times.
-  dt.REGEXP_CHARS = REGEXP_CHARS = '^$[]().{}+*?|'.split ''
+  dt.REGEXP_CHARS = '^$[]().{}+*?|'.split ''
 
   # ## `datetime.PARSE_TOKEN_RE`
   #
   # The regular expression for finding tokens in a format string during
   # parsing.
-  dt.PARSE_TOKEN_RE = PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g
+  dt.PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g
 
   # ## `datetime.MONTHS`
   #
   # Month names
-  dt.MONTHS = MONTHS = [
+  dt.MONTHS = [
     'January'
     'February'
     'March'
@@ -155,7 +155,7 @@ define () ->
   # ## `datetime.MNTH`
   #
   # Short month names (three-letter abbreviations).
-  dt.MNTH = MNTH = [
+  dt.MNTH = [
     'Jan'
     'Feb'
     'Mar'
@@ -173,7 +173,7 @@ define () ->
   # ## `datetime.DAYS`
   #
   # Week day names, starting with Sunday.
-  dt.DAYS = DAYS = [
+  dt.DAYS = [
     'Sunday'
     'Monday'
     'Tuesday'
@@ -186,7 +186,7 @@ define () ->
   # ## `datetime.DY`
   #
   # Abbreviated week day names.
-  dt.DY = DY = [
+  dt.DY = [
     'Sun'
     'Mon'
     'Tue'
@@ -199,36 +199,36 @@ define () ->
   # ## `datetime.AM`
   #
   # Ante-meridiem shorthand
-  dt.AM = AM = 'a.m.'
+  dt.AM = 'a.m.'
 
   # ## `datetime.PM`
   #
   # Post-meridiem shorthand
-  dt.PM = PM = 'p.m.'
+  dt.PM = 'p.m.'
 
 
   # ## `datetime.WEEK_START`
   #
   # Day the week starts on. 0 is Sunday, 1 is Monday, and so on.
-  dt.WEEK_START = WEEK_START = 0
+  dt.WEEK_START = 0
 
   # ## `datetime.FORMAT_TOKENS`
   #
   # Definitions of formatting tokens used by the `#strftime()` method. All
   # format functions are applied to a `Date` object so the `Date` methods can
   # be called on `this`.
-  dt.FORMAT_TOKENS = FORMAT_TOKENS =
+  dt.FORMAT_TOKENS =
     # Shorthand day-of-week name
-    '%a': () -> DY[@getDay()]
+    '%a': () -> dt.DY[@getDay()]
 
     # Full day-of-week name
-    '%A': () -> DAYS[@getDay()]
+    '%A': () -> dt.DAYS[@getDay()]
 
     # Shorthand three-letter month name
-    '%b': () -> MNTH[@getMonth()]
+    '%b': () -> dt.MNTH[@getMonth()]
 
     # Full month name
-    '%B': () -> MONTHS[@getMonth()]
+    '%B': () -> dt.MONTHS[@getMonth()]
 
     # Locale-formatted date and time (dependent on browser/platform/device),
     # here added for compatibility reasons.
@@ -259,7 +259,7 @@ define () ->
     # Zero-padded day of year
     '%j': () ->
       firstOfYear = new Date this.getFullYear(), 0, 1
-      zeroPad Math.ceil((this - firstOfYear) / DAY_MS), 3
+      zeroPad Math.ceil((this - firstOfYear) / dt.DAY_MS), 3
 
     # Zero-padded numeric month
     '%m': () -> zeroPad @getMonth() + 1, 2
@@ -274,7 +274,7 @@ define () ->
     '%N': () -> "#{@getMinutes()}"
 
     # am/pm
-    '%p': () -> ((h) -> if 0 <= h < 12 then AM else PM)(@getHours())
+    '%p': () -> ((h) -> if 0 <= h < 12 then dt.AM else dt.PM)(@getHours())
 
     # Non-zero-padded seconds
     '%s': () -> "#{@getSeconds()}"
@@ -324,7 +324,7 @@ define () ->
   # The converter function will take the matched string, and a meta object. The
   # meta object is later used as source of information for building the final
   # `Date` object.
-  dt.PARSE_RECIPES = PARSE_RECIPES =
+  dt.PARSE_RECIPES =
     '%b': () ->
       re: "#{dt.MNTH.join '|'}"
       fn: (s, meta) ->
@@ -485,7 +485,7 @@ define () ->
     thisWeek: () ->
       d = new Date()
       # Difference in days between week start and today
-      diff = d.getDay() - WEEK_START
+      diff = d.getDay() - dt.WEEK_START
       d.setDate d.getDate() - diff
       datetime.resetTime d
 
@@ -682,10 +682,10 @@ define () ->
     #     datetime.datetime.strftime(d, 'On %b %d at %i:%M %p');
     #
     strftime: (d, sformat) ->
-      for token of FORMAT_TOKENS
+      for token of dt.FORMAT_TOKENS
         r = new RegExp token, 'g'
         sformat = sformat.replace r, () ->
-          FORMAT_TOKENS[token].call(d)
+          dt.FORMAT_TOKENS[token].call(d)
       sformat
 
     # ## datetime.dtformat.isoformat(d)
@@ -733,14 +733,14 @@ define () ->
     strptime: (s, sformat) ->
       # Escape all regexp special characters
       rxp = sformat.replace /\\/, '\\\\'
-      for schr in REGEXP_CHARS
+      for schr in dt.REGEXP_CHARS
         rxp = rxp.replace new RegExp('\\' + schr, 'g'), "\\#{schr}"
 
       # Interpolate the format tokens and obtain converter functions
       converters = []
-      rxp = rxp.replace PARSE_TOKEN_RE, (m, token) ->
+      rxp = rxp.replace dt.PARSE_TOKEN_RE, (m, token) ->
         # Get the token regexp and parser function
-        {re, fn} = PARSE_RECIPES[token]()
+        {re, fn} = dt.PARSE_RECIPES[token]()
         converters.push fn
         "(#{re})"
 

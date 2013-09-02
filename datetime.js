@@ -24,7 +24,7 @@ define = (function(root) {
 })(this);
 
 define(function() {
-  var AM, DAYS, DAY_MS, DY, FORMAT_TOKENS, MNTH, MONTHS, PARSE_RECIPES, PARSE_TOKEN_RE, PM, REGEXP_CHARS, WEEK_START, cycle, datetime, dt, dtdelta, format, hour24, parse, zeroPad;
+  var DAY_MS, cycle, datetime, dt, dtdelta, format, hour24, parse, zeroPad;
   dt = {};
   dt.utils = {
     zeroPad: function(i, digits, tail) {
@@ -72,27 +72,27 @@ define(function() {
   cycle = dt.utils.cycle;
   hour24 = dt.utils.hour24;
   dt.DAY_MS = DAY_MS = 86400000;
-  dt.REGEXP_CHARS = REGEXP_CHARS = '^$[]().{}+*?|'.split('');
-  dt.PARSE_TOKEN_RE = PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g;
-  dt.MONTHS = MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  dt.MNTH = MNTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  dt.DAYS = DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  dt.DY = DY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  dt.AM = AM = 'a.m.';
-  dt.PM = PM = 'p.m.';
-  dt.WEEK_START = WEEK_START = 0;
-  dt.FORMAT_TOKENS = FORMAT_TOKENS = {
+  dt.REGEXP_CHARS = '^$[]().{}+*?|'.split('');
+  dt.PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g;
+  dt.MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  dt.MNTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  dt.DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  dt.DY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  dt.AM = 'a.m.';
+  dt.PM = 'p.m.';
+  dt.WEEK_START = 0;
+  dt.FORMAT_TOKENS = {
     '%a': function() {
-      return DY[this.getDay()];
+      return dt.DY[this.getDay()];
     },
     '%A': function() {
-      return DAYS[this.getDay()];
+      return dt.DAYS[this.getDay()];
     },
     '%b': function() {
-      return MNTH[this.getMonth()];
+      return dt.MNTH[this.getMonth()];
     },
     '%B': function() {
-      return MONTHS[this.getMonth()];
+      return dt.MONTHS[this.getMonth()];
     },
     '%c': function() {
       return this.toLocaleString();
@@ -122,7 +122,7 @@ define(function() {
     '%j': function() {
       var firstOfYear;
       firstOfYear = new Date(this.getFullYear(), 0, 1);
-      return zeroPad(Math.ceil((this - firstOfYear) / DAY_MS), 3);
+      return zeroPad(Math.ceil((this - firstOfYear) / dt.DAY_MS), 3);
     },
     '%m': function() {
       return zeroPad(this.getMonth() + 1, 2);
@@ -139,9 +139,9 @@ define(function() {
     '%p': function() {
       return (function(h) {
         if ((0 <= h && h < 12)) {
-          return AM;
+          return dt.AM;
         } else {
-          return PM;
+          return dt.PM;
         }
       })(this.getHours());
     },
@@ -185,7 +185,7 @@ define(function() {
       return '';
     }
   };
-  dt.PARSE_RECIPES = PARSE_RECIPES = {
+  dt.PARSE_RECIPES = {
     '%b': function() {
       return {
         re: "" + (dt.MNTH.join('|')),
@@ -412,7 +412,7 @@ define(function() {
     thisWeek: function() {
       var d, diff;
       d = new Date();
-      diff = d.getDay() - WEEK_START;
+      diff = d.getDay() - dt.WEEK_START;
       d.setDate(d.getDate() - diff);
       return datetime.resetTime(d);
     },
@@ -490,10 +490,10 @@ define(function() {
   dt.format = format = {
     strftime: function(d, sformat) {
       var r, token;
-      for (token in FORMAT_TOKENS) {
+      for (token in dt.FORMAT_TOKENS) {
         r = new RegExp(token, 'g');
         sformat = sformat.replace(r, function() {
-          return FORMAT_TOKENS[token].call(d);
+          return dt.FORMAT_TOKENS[token].call(d);
         });
       }
       return sformat;
@@ -505,16 +505,17 @@ define(function() {
   };
   dt.parse = parse = {
     strptime: function(s, sformat) {
-      var converters, d, fn, idx, localOffset, matches, meta, offset, rxp, schr, _i, _j, _len, _len1;
+      var converters, d, fn, idx, localOffset, matches, meta, offset, rxp, schr, _i, _j, _len, _len1, _ref;
       rxp = sformat.replace(/\\/, '\\\\');
-      for (_i = 0, _len = REGEXP_CHARS.length; _i < _len; _i++) {
-        schr = REGEXP_CHARS[_i];
+      _ref = dt.REGEXP_CHARS;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        schr = _ref[_i];
         rxp = rxp.replace(new RegExp('\\' + schr, 'g'), "\\" + schr);
       }
       converters = [];
-      rxp = rxp.replace(PARSE_TOKEN_RE, function(m, token) {
-        var fn, re, _ref;
-        _ref = PARSE_RECIPES[token](), re = _ref.re, fn = _ref.fn;
+      rxp = rxp.replace(dt.PARSE_TOKEN_RE, function(m, token) {
+        var fn, re, _ref1;
+        _ref1 = dt.PARSE_RECIPES[token](), re = _ref1.re, fn = _ref1.fn;
         converters.push(fn);
         return "(" + re + ")";
       });
