@@ -9,16 +9,18 @@ dates and times.
  + [Installation](#installation)
  + [Basic usage](#basic-usage)
  + [API reference](#api-reference)
-   - [`datetime.strftime`](#api-strftime)
-   - [`datetime.strptime`](#api-strptime)
-   - [`datetime.isoformat`](#api-isoformat)
-   - [`datetime.isoparse`](#api-isoparse)
+   - [`datetime.datetime`](#api-datetime)
+   - [`datetime.dtdelta`](#api-dtdelta)
+   - [`datetime.format`](#api-format)
+   - [`datetime.parse`](#api-parse)
+   - [`datetime.utils`](#api-utils)
  + [Variables](#const)
    - [`ISO_FORMAT`](#const-isoformat)
  + [Formatting tokens](#formatting-tokens)
  + [Parsing tokens](#parsing-tokens)
  + [Running unit tests](#running-unit-tests)
  + [Reporting bugs](#reporting-bugs)
+
 
 ## Motivation <a name="motivation"></a>
 
@@ -35,6 +37,7 @@ not even the first reason that comes to mind. Without going further into
 philosophical discussion, I consider strftime formatting to be superior and I
 want to use it in JavaScript. Period.
 
+
 ## Installation <a name="installation></a>
 
 The `datetime.js` module is in UMD format, and it is usable in both the
@@ -50,6 +53,7 @@ you normally do if you use RequireJS and similar AMD loaders.
 It is also installable with [volo](http://volojs.org/):
 
     volo add foxbunny/datetimejs
+
 
 ## Basic usage <a name="basic-usage"></a>
 
@@ -100,16 +104,192 @@ Sorting dates is also quite easy:
     );
     // returns [Date(2013, 4, 10), Date(2013, 5, 15), Date(2013, 6, 12)]
 
+
 ## API reference <a name="api-reference"></a>
 
-This section is a complete API reference for DatetimeJS methods. It is usually
-written after the comments in the source code.
+The `datetime.js` module is organized into several submodules. These are:
 
-### `datetime.strftime(d, format)` <a name="api-strftime"></a>
+ + `datetime.datetime` - `Date` object creation and manipulaton
+ + `datetime.dtdelta` - Date- and time-difference-related methods
+ + `datetime.format` - Date and time formatting
+ + `datetime.parse` - Date and time parsing
+ + `datetime.utils` - Utility functions
+
+
+### `datetime.datetime`
+
+This submodule contains methods for creating and manipulating `Date` objects.
+
+
+#### `#clone(d)` <a name="api-clone"></a>
+
+Creates a new `Date` object that has identical date and time to `d`.
+
+
+#### `#addDays(d, v)` <a name=="api-adddays"></a>
+
+Adds `v` number of days to `d` `Date` object and returns a new instance. `v`
+can be either positive or negative. To remove days, simply pass a negative
+value. Note that this crosses month and year boundaries, so adding `365` days
+to a `Date` object will forward that object by approximately one year. This
+does not take into account leap years, though, so you should use
+[`#addYears()`](#api-addyears) instead.
+
+
+#### `#addMonths(d, v)` <a name="api-addmonths"></a>
+
+Adds `v` number of months to `d` `Date` object and returns a new instance. `v`
+can be either positive or negative. This method will also change the year if
+needed. For eample, adding 12 month will forward the date by one year.
+
+
+#### `#addYears(d, v)` <a name="api-addyears"></a>
+
+Adds `v` years to `d` `Date` object. `v` can either be positive or negative.
+
+
+#### `resetTime(d)` <a name="api-resettime"></a>
+
+Resets the hours, minutes, seconds, and milliseconds to 0 and returns a new
+instance.
+
+
+#### `#today()` <a name="api-today"></a>
+
+Returns a `Date` object that represents today's date with time part reset to 0.
+
+
+#### `#thisMonth()` <a name="api-thismonth"></a>
+
+Returns a `Date` object that represents the first day of current month.
+
+
+#### `#thisWeek()` <a name="api-thisweek"></a>
+
+Returns a `Date` object that represents the first day of current week. This
+method will use the [`WEEK_START`](#const-weekstart) variable to determine what
+day the week starts on.
+
+
+#### `#toUTC(d)` <a name="api-toutc"></a>
+
+Since JavaScript's date and time API does not really provide means for
+manipulating time zones, this method provides an ugly hack to get the UTC time
+for a given `Date` object. It simply shifts the date by the offset of the date
+object and returns an instance that is in local time, but has date and time
+shifted so it represents the same values as the UTC time zone.
+
+
+### `datetime.dtdelta` <a name="api-dtdelta"></a>
+
+This module contains methods for working with date and time differences.
+
+Please note that in comparison methods like [`#isBefore()`](#api-isbefore) or
+[`#isAfter()`](#api-isafter), the first argument is always the value we want to
+test, and the other arguments are reference values. 
+
+    datetime.dtdelta.isBefore(a, b);
+    // 'Is a before b?'
+
+    datetime.dtdelta.isBeteween(a, b, c);
+    // 'Is a between b and c?'
+
+
+#### `#delta(d1, d2)` <a name="api-delta"></a>
+
+Calculates the difference between two `Date` objects and returns a delta
+object. The delta object has the following structure:
+
+    d.delta // relative difference
+    d.milliseconds // total absolute difference in milliseconds
+    d.seconds // total absolute difference in seconds (rounded up)
+    d.minutes // total absolute difference in minutes (rounded up)
+    d.hours // total absolute difference in hours (rounded up)
+    d.days // total absolute difference in days (rounded up)
+    d.composite // composite absolute difference
+
+The `delta` key is the same as performing `d2 - d1` (and that is how it's
+obtained).
+
+'Relative difference' means the difference between `d1` and `d2` relative to
+`d1`. This can be a negative or positive number in milliseconds. All other
+values (including the `milliseconds` key) are absolute, which means they are
+always positive.
+
+The composite difference is an array containing the total difference broken
+down into days, hours, minutes, seconds, and milliseconds.
+
+
+#### `#reorder(d, [d1, d2...])` <a name="api-reorder"></a>
+
+Reorders the `Date` objects passed as arguments from the oldest to newest. This
+method takes any number of arguments, and does not take arrays.
+
+If you want to pass an array, you can simply apply `#reorder()`:
+
+    var a = [d1, d2, d3];
+    datetime.dtdelta.reorder.apply(null, a);
+
+There is no native support for reverse sorting. You can always reverse the
+result, though:
+
+    var res = datetime.dtdelta.reorder(d1, d2, d3);
+    res.reverse()
+
+_New in 0.3.0_: This method no longer uses `#delta()` internally, so
+overloading the `#delta()` method will not change its behavior.
+
+
+#### `#isBefore(d, d1)` <a href="api-isbefore"></a>
+
+Returns `true` is `d` is before `d1`. Note that if the objects represent the
+same time, the method will return `false`.
+
+
+#### `#isAfter(d, d1)` <a href="api-isafter"></a>
+
+Returns `true` if `d` is after `d1`. Note that if the objects rerpresent the
+same time, the method will return `false`.
+
+
+#### `#isBetween(d, d1, d2)` <a href="api-isbetween"></a>
+
+Returns `true` if `d` is between `d1` and `d2` (and not equal to either `d1` or
+`d2`). Note that the order of `d1` and `d2` does not matter.
+
+
+#### `#isDateBefore(d, d1)` <a href="api-isdatebefore"><a>
+
+Same as [`#isBefore()`](#api-isbefore) but ignores the time differences.
+
+
+#### `#isDateAfter(d, d1)` <a href="api-isdateafter"><a>
+
+Same as [`#isAfter()`](#api-isafter) but ignores the time differences.
+
+
+#### `#isDateBetween(d, d1, d2)` <a href="api-isdatebetween"></a>
+
+Sale as [`#isBetween()`](#api-isbetween) but ignores the time differences.
+
+
+#### `#isLeapYear(d)` <a href="api-isleapyear"></a>
+
+Returns `true` if `d` object is in a leap year.
+
+
+### `datetime.format`
+
+This submodule contains methods related to formatting dates.
+
+
+#### `#strftime(d, sformat)` <a name="api-strftime"></a>
 
 Formats date and time. The `d` argument is a JavaScript `Date` object, and
-`format` is an arbitrary  string containing the formatting tokens (see
+`sformat` is an arbitrary  string containing the formatting tokens (see
 [Formatting tokens](#formatting-tokens)).
+
+This method is aliased as `datetime.strftime` for convenience.
 
 Example:
 
@@ -117,12 +297,31 @@ Example:
     datetime.strftime(d, 'The date is %D %B %Y');
     // returns 'The date is 21 September 2013'
 
-### `datetime.strptime(s, format)` <a name="api-strptime"></a>
+
+#### `#isoformat(d)` <a name="api-isoformat"></a>
+
+Shortcut for formatting using ISO format. You can change the ISO format you are
+going to be using by changing the [`ISO_FORMAT`](#const-isoformat) variable.
+
+The date is internally converted to UTC before formatting, so the resulting
+timestamp is always in UTC regardless of your platform's local time zone.
+
+This method is aliased as `datetime.isoformat` for convenience.
+
+
+### `datetime.parse`
+
+This submodule contains methods for parsing dates and times.
+
+
+#### `#strptime(s, sformat)` <a name="api-strptime"></a>
 
 Parses date and time. This method will parse a string `s` containing a date
-and/or time formatted as `format`. The `format` string is similar to the one
+and/or time formatted as `sformat`. The `format` string is similar to the one
 used in `#strftime()` except that it uses a subset of formatting tokens (see
 [Parsing tokens](#parsing-tokens)).
+
+This method is aliased as `datetime.strptime` for convenience.
 
 Example:
 
@@ -130,13 +329,6 @@ Example:
     datetime.strptime(s, 'The date is %D %B %Y')
     // returns Date(2013, 8, 21, 0, 0, 0, 0)
 
-### `datetime.isoformat(d)` <a name="api-isoformat"></a>
-
-Shortcut for formatting using ISO format. You can change the ISO format you are
-going to be using by changing the [`ISO_FORMAT`](#const-isoformat) variable.
-
-The date is internally converted to UTC before formatting, so the resulting
-timestamp is always in UTC regardless of your platform's local time zone.
 
 ### `datetime.isoparse(s)` <a name="api-isoparse"></a>
 
@@ -148,11 +340,161 @@ The input string is considered to represent a date and time in UTC and is
 compensated for time zone difference between UTC and platform's local time
 zone. The output date time object will always be in local time.
 
+This method is alias as `datetime.strptime` for convenience.
+
+
 ## Variables <a name="const"></a>
 
 Some of DatetimeJS's behavior and output can be customized by changing the
-internal variables. The internal variables are all exposed through the
-`datetime` module. This is done intentionally for customization purposes.
+internal variables. 
+
+The internal variables are all exposed through the`datetime` module. This is
+done intentionally for customization purposes.
+
+To get or set a variable simple use it as `datetime` property:
+
+    datetime.DY = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
+
+### `DATE_MS` <a name="const-datems"></a>
+
+Default is 86400000. Number of milliseconds in a day. Changing this _will_
+generally lead to weird behavior, but you're free to do it if you know what you
+are doing.
+
+### `REGEXP_CHARS` <a name="const-regexpchars"></a>
+
+An array of regexp characters that the parser will escape before parsing. By
+default, these are the following:
+
+    ^ $ [ ] ( ) . { } + * ? |
+
+### `PARSE_TOKEN_RE` <a name="const-parsetokenre"></a>
+
+Regular expression for finding embedded tokens during parsing. The default
+regexp is:
+
+    /(%[bBdDfHiImMnNpsSryYz])/g
+
+If you are modifying the regular expression (e.g., to add new tokens or
+completely change the way tokens are found), remember that the parser will 
+ignore tokens that are not captured.
+
+### `MONTHS` <a name="const-months"></a>
+
+Array containing full month names. Default is English month names.
+
+### `MNTH` <a name="const-mnth"></a>
+
+Array containing three-letter abbreviation of month names. Default is
+abbreviated English month names.
+
+### `DAYS` <a name="const-days"></a>
+
+Array containing full English week day names.
+
+### `DY` <a name="const-dy"></a>
+
+Array containing abbreviated three-letter English week day names.
+
+### `AM` <a name="const-am"></a>
+
+The abbreviated ante-meridiem. By default it's 'a.m.'.
+
+### `PM` <a name="const-pm"></a>
+
+The abbreviated post-meridiem. By default it's 'p.m.'.
+
+### `WEEK_START` <a name="const-weekstart"></a>
+
+Numeric week day on which week starts, where 0 is Sunday. By default, it's 0
+(Sunday).
+
+### `FORMAT_TOKENS` <a name="const-formattokens"</a>
+
+This variable is an object, that maps [formatting tokens](#formatting-tokens)
+to formatting functions. 
+
+Each formatting function is applied to the date object being formatted and
+returns a string representing the value of its token. 
+
+To add new tokens, simply add a new key to this object that represents the
+token (it will be used directly in a regexp, so make sure any special
+characters are escaped), and assign a function that will do the formatting. The
+`this` inside the function represents the date object.
+
+For example, let's add a token '%o' that will return a date in ordinal format:
+
+    datetime.FORMAT_TOKENS['%o'] = function() {
+        var date = this.getDate().toString();
+        if (['11', '12', '13'].indexOf(date) >= 0) {
+            return date + 'th';
+        }
+        switch (date.slice(-1)) {
+            case '1': return date + 'st';
+            case '2': return date + 'nd';
+            case '3': return date + 'rd';
+            default: return date + 'th';
+        }
+    };
+
+    var d1 = new Date(2013, 8, 1);
+    var d2 = new Date(2013, 8, 2);
+    var d3 = new Date(2013, 8, 3);
+    var d4 = new Date(2013, 8, 15);
+
+    console.log(datetime.strftime(d1, 'On %o'));
+    console.log(datetime.strftime(d2, 'On %o'));
+    console.log(datetime.strftime(d3, 'On %o'));
+    console.log(datetime.strftime(d4, 'On %o'));
+
+    // On 1st
+    // On 2nd
+    // On 3rd
+    // On 4th
+
+As you can see, you are not really limited to standard tokens for formatting.
+Developers can use this feature to add tokens that are specific to the 
+application as well, not just date formatting in general (e.g., output an
+entire block of HTML depending on the date's value).
+
+Note that tokens are not limited to 2 characters nor do they have to start with
+a percent character. They are case sensitive, though.
+
+### `PARSE_RECIPES` <a name="const-parserrecipes"></a>
+
+This variable is a [`FORMAT_TOKENS`](#const-formattokens) counterpart used for
+parsing. Again, each token is a key on this object, and it maps to a function
+that performs the parsing.
+
+The parsing function must return an object with two keys. The `re` key contains
+the regexp fragment that matches values for the given token, and the `fn` key
+contains a function that transforms a `meta` object later used by the parser to
+construct a date object. 
+
+The meta object has following properties:
+
+    meta.year // full integer year
+    meta.month // 0-indexed month
+    meta.date // integer date (as in day of month)
+    meta.hour // integer hour in 12- or 24-hour format
+    meta.minute // integer minute
+    meta.second // integer second
+    meta.millisecond // integer millisecond (0 to 999)
+    meta.timeAdjust // for 12-hour hour format adjust for PM by adding 12 hours
+    meta.teimzone // the time zone offset in minutes (-720 to +720)
+
+Each parsing function will modify the meta object with its own data. You can
+also read the data off the meta object, but you should keep in mind the order
+in which parsing functions are executed since you will only be able to read the
+data added by the previous parse functions. The order in which functions are
+run is determined by the order in which tokens appear in the format string.
+
+The regular expression fragment must have all its backslashes escaped. So,
+instead of typing `'\d'`, you must type `'\\d'`.
+
+It is currently not possible to add new paring functions. This is planned for
+future versions, when adding new functions will be as easy as adding new
+formatting tokens.
 
 ### `ISO_FORMAT` <a name="const-isoformat"></a>
 
