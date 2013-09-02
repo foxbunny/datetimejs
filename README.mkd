@@ -85,6 +85,69 @@ Sorting dates is also quite easy:
     );
     // returns [Date(2013, 4, 10), Date(2013, 5, 15), Date(2013, 6, 12)]
 
+## Formatting tokens
+
+The following tokens are recognized by `datetime.strftime`:
+
+ + %a - Short week day name (e.g. 'Sun', 'Mon'...)
+ + %A - Long week day name (e.g., 'Sunday', 'Monday'...)
+ + %b - Short month name (e.g., 'Jan', 'Feb'...)
+ + %B - Full month name (e.g., 'January', 'February'...)
+ + %c - Locale-formatted date and time (platform-dependent)
+ + %d - Zero-padded date (e.g, 02, 31...)
+ + %D - Non-zero-padded date (e.g., 2, 31...)
+ + %f - Zero-padded decimal seconds (e.g., 04.23, 23.50)
+ + %H - Zero-padded hour in 24-hour format (e.g., 8, 13, 0...)
+ + %i - Non-zero-padded hour in 12-hour format (e.g., 8, 1, 12...)
+ + %I - Zero-padded hour in 12-hour format (e.g., 08, 01, 12...)
+ + %j - Zero-padded day of year (e.g., 002, 145, 364...)
+ + %m - Zero-padded month (e.g., 01, 02...)
+ + %M - Zero-padded minutes (e.g., 01, 12, 59...)
+ + %n - Non-zero-padded month (e.g., 1, 2...)
+ + %N - Non-zero-padded minutes (e.g., 1, 12, 59)
+ + %p - AM/PM (a.m. and p.m.)
+ + %s - Non-zero-padded seconds (e.g., 1, 2, 50...)
+ + %S - Zero-padded seconds (e.g., 01, 02, 50...)
+ + %r - Milliseconds (e.g., 1, 24, 500...)
+ + %w - Numeric week day where 0 is Sunday (e.g., 0, 1...)
+ + %y - Zero-padded year without the century part (e.g., 01, 13, 99...)
+ + %Y - Full year (e.g., 2001, 2013, 2099...)
+ + %z - Timezone in +HHMM or -HHMM format (e.g., +0200, -0530)
+ + %x - Locale-formatted date (platform dependent)
+ + %X - Locale-formatted time (platform dependent)
+ + %% - Literal percent character %
+
+If you are coming from Python, you might be used to using `%f` to mean
+microseconds. The same token in DatetimeJS has a different meaning (float
+seconds).
+
+## Parsing tokens
+
+The following tokens are recognized when parsing:
+
+ + %b - Short month name (e.g., 'Jan', 'Feb'...)
+ + %B - Full month name (e.g., 'January', 'February'...)
+ + %d - Zero-padded date (e.g, 02, 31...)
+ + %D - Non-zero-padded date (e.g., 2, 31...)
+ + %H - Zero-padded hour in 24-hour format (e.g., 8, 13, 0...)
+ + %i - Non-zero-padded hour in 12-hour format (e.g., 8, 1, 12...)
+ + %I - Zero-padded hour in 12-hour format (e.g., 08, 01, 12...)
+ + %m - Zero-padded month (e.g., 01, 02...)
+ + %M - Zero-padded minutes (e.g., 01, 12, 59...)
+ + %n - Non-zero-padded month (e.g., 1, 2...)
+ + %N - Non-zero-padded minutes (e.g., 1, 12, 59)
+ + %p - AM/PM (a.m. and p.m.)
+ + %s - Non-zero-padded seconds (e.g., 1, 2, 50...)
+ + %S - Zero-padded seconds (e.g., 01, 02, 50...)
+ + %r - Milliseconds (e.g., 1, 24, 500...)
+ + %y - Zero-padded year without the century part (e.g., 01, 13, 99...)
+ + %Y - Full year (e.g., 2001, 2013, 2099...)
+ + %z - Time zone in +HHMM or -HHMM format or 'Z' (e.g., +1000, -0200)
+
+The `%z` token behaves slightly differently when parsing date and time strings.
+In addition to formats that strftime outputs, it also supports 'Z', which
+allows parsing of ISO timestamps.
+
 ## API documentation
 
 Yes, on TODO list. Meanwhile, look at the CoffeeScript source in the `src`
