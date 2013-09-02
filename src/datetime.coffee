@@ -762,7 +762,7 @@ define () ->
   dt.isoparse = (s) ->
     d = @strptime(s, dt.ISO_FORMAT)
     # Account for the timezone difference since original date is in UTC
-    d.setMinutes d.getMinutes() + d.getTimezoneOffset()
+    d.setMinutes d.getMinutes() - d.getTimezoneOffset()
     d
 
   dt
