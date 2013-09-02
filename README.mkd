@@ -361,11 +361,13 @@ To get or set a variable simple use it as `datetime` property:
 
     datetime.DY = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
 
+
 ### `DATE_MS` <a name="const-datems"></a>
 
 Default is 86400000. Number of milliseconds in a day. Changing this _will_
 generally lead to weird behavior, but you're free to do it if you know what you
 are doing.
+
 
 ### `REGEXP_CHARS` <a name="const-regexpchars"></a>
 
@@ -374,46 +376,43 @@ default, these are the following:
 
     ^ $ [ ] ( ) . { } + * ? |
 
-### `PARSE_TOKEN_RE` <a name="const-parsetokenre"></a>
-
-Regular expression for finding embedded tokens during parsing. The default
-regexp is:
-
-    /(%[bBdDfHiImMnNpsSryYz])/g
-
-If you are modifying the regular expression (e.g., to add new tokens or
-completely change the way tokens are found), remember that the parser will 
-ignore tokens that are not captured.
 
 ### `MONTHS` <a name="const-months"></a>
 
 Array containing full month names. Default is English month names.
+
 
 ### `MNTH` <a name="const-mnth"></a>
 
 Array containing three-letter abbreviation of month names. Default is
 abbreviated English month names.
 
+
 ### `DAYS` <a name="const-days"></a>
 
 Array containing full English week day names.
+
 
 ### `DY` <a name="const-dy"></a>
 
 Array containing abbreviated three-letter English week day names.
 
+
 ### `AM` <a name="const-am"></a>
 
 The abbreviated ante-meridiem. By default it's 'a.m.'.
+
 
 ### `PM` <a name="const-pm"></a>
 
 The abbreviated post-meridiem. By default it's 'p.m.'.
 
+
 ### `WEEK_START` <a name="const-weekstart"></a>
 
 Numeric week day on which week starts, where 0 is Sunday. By default, it's 0
 (Sunday).
+
 
 ### `FORMAT_TOKENS` <a name="const-formattokens"</a>
 
@@ -466,6 +465,11 @@ entire block of HTML depending on the date's value).
 Note that tokens are not limited to 2 characters nor do they have to start with
 a percent character. They are case sensitive, though.
 
+(If you are wondering why this seemingly very useful token isn't included by
+default, it's because it's English only, and DatetimeJS is supposed to b easy
+to localize.)
+
+
 ### `PARSE_RECIPES` <a name="const-parserrecipes"></a>
 
 This variable is a [`FORMAT_TOKENS`](#const-formattokens) counterpart used for
@@ -498,9 +502,38 @@ run is determined by the order in which tokens appear in the format string.
 The regular expression fragment must have all its backslashes escaped. So,
 instead of typing `'\d'`, you must type `'\\d'`.
 
-It is currently not possible to add new paring functions. This is planned for
-future versions, when adding new functions will be as easy as adding new
-formatting tokens.
+_New in 0.3.1_
+
+After minor fixes to the way [variables](#variables) are used internally, it is
+finally possible to add new parse recipes.
+
+Let's demonstrate writing a parse function by adding a parse function of the
+new token we've added in the [previous section](#const-formattokens).
+
+    datetime.PARSE_RECIPES['%o'] = function() {
+        return {
+            re: '31st|30th|20th|1\\dth|2?(?:1st|2nd|3rd|[4-9]th)',
+            fn: function(s, meta) {
+                meta.date = parseInt(s.slice(0, -2), 10);
+            }
+        };
+    };
+
+    var s1 = 'December 1st, 2012'
+    var s2 = 'April 22nd, 2003'
+    var s3 = 'January 11th, 2014'
+    var format = '%B %o, %Y'
+
+    console.log(datetime.strptime(s1, format));
+    console.log(datetime.strptime(s2, format));
+    console.log(datetime.strptime(s3, format));
+
+And yes, I know the regexp isn't particularly clever, but it's generally a good
+idea to have a regexp that will match only what it needs to.
+
+(If you are wondering why this seemingly very useful token isn't included by
+default, it's because it's English only, and DatetimeJS is supposed to b easy
+to localize.)
 
 ### `ISO_FORMAT` <a name="const-isoformat"></a>
 
