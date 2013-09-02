@@ -19,6 +19,7 @@ dates and times.
  + [Formatting tokens](#formatting-tokens)
  + [Parsing tokens](#parsing-tokens)
  + [Running unit tests](#running-unit-tests)
+ + [Known issues](#known-issues)
  + [Reporting bugs](#reporting-bugs)
 
 
@@ -343,6 +344,11 @@ zone. The output date time object will always be in local time.
 This method is alias as `datetime.strptime` for convenience.
 
 
+## `datetime.utils` <a name="api-utils"></a>
+
+TODO
+
+
 ## Variables <a name="const"></a>
 
 Some of DatetimeJS's behavior and output can be customized by changing the
@@ -581,6 +587,12 @@ directory.
 For NodeJS, run:
 
     mocha tests/*.js
+
+## Known issues
+
+It is not possible to override some of the internal variables that are exposed
+thorugh the module. This will be fixed in 0.4.0. There are currently no known
+workarounds.
 
 ## Reporting bugs
 
