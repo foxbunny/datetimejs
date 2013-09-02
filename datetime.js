@@ -24,62 +24,64 @@ define = (function(root) {
 })(this);
 
 define(function() {
-  var AM, DAYS, DAY_MS, DY, MNTH, MONTHS, PARSE_TOKEN_RE, PM, REGEXP_CHARS, cycle, dt, hour24, zeroPad;
-  DAY_MS = 86400000;
-  REGEXP_CHARS = '^$[]().{}+*?|'.split('');
-  PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g;
-  dt = {
-    utils: {},
-    datetime: {}
-  };
-  dt.utils.zeroPad = zeroPad = function(i, digits, tail) {
-    var f, _ref;
-    if (digits == null) {
-      digits = 3;
-    }
-    if (tail == null) {
-      tail = false;
-    }
-    if (tail === false) {
-      return ((new Array(digits)).join('0') + i).slice(-digits);
-    } else {
-      _ref = i.toString().split('.'), i = _ref[0], f = _ref[1];
-      if (tail === 0) {
-        return zeroPad(i, digits - tail, false);
+  var AM, DAYS, DAY_MS, DY, FORMAT_TOKENS, MNTH, MONTHS, PARSE_RECIPES, PARSE_TOKEN_RE, PM, REGEXP_CHARS, WEEK_START, cycle, datetime, dt, dtdelta, format, hour24, parse, zeroPad;
+  dt = {};
+  dt.utils = {
+    zeroPad: function(i, digits, tail) {
+      var f, _ref;
+      if (digits == null) {
+        digits = 3;
+      }
+      if (tail == null) {
+        tail = false;
+      }
+      if (tail === false) {
+        return ((new Array(digits)).join('0') + i).slice(-digits);
       } else {
-        f || (f = '0');
-        i = zeroPad(i, digits - 1 - tail, false);
-        f = zeroPad(f.split('').reverse().join(''), tail, false);
-        f = f.split('').reverse().join('');
-        return [i, f].join('.');
+        _ref = i.toString().split('.'), i = _ref[0], f = _ref[1];
+        if (tail === 0) {
+          return zeroPad(i, digits - tail, false);
+        } else {
+          f || (f = '0');
+          i = zeroPad(i, digits - 1 - tail, false);
+          f = zeroPad(f.split('').reverse().join(''), tail, false);
+          f = f.split('').reverse().join('');
+          return [i, f].join('.');
+        }
+      }
+    },
+    cycle: function(i, max, zeroIndex) {
+      if (zeroIndex == null) {
+        zeroIndex = false;
+      }
+      return i % max || (zeroIndex ? 0 : max);
+    },
+    hour24: function(h, pm) {
+      if (!pm) {
+        return h;
+      }
+      h += 12;
+      if (h === 24) {
+        return 0;
+      } else {
+        return h;
       }
     }
   };
-  dt.utils.cycle = cycle = function(i, max, zeroIndex) {
-    if (zeroIndex == null) {
-      zeroIndex = false;
-    }
-    return i % max || (zeroIndex ? 0 : max);
-  };
-  dt.utils.hour24 = hour24 = function(h, pm) {
-    if (!pm) {
-      return h;
-    }
-    h += 12;
-    if (h === 24) {
-      return 0;
-    } else {
-      return h;
-    }
-  };
+  zeroPad = dt.utils.zeroPad;
+  cycle = dt.utils.cycle;
+  hour24 = dt.utils.hour24;
+  dt.DAY_MS = DAY_MS = 86400000;
+  dt.REGEXP_CHARS = REGEXP_CHARS = '^$[]().{}+*?|'.split('');
+  dt.PARSE_TOKEN_RE = PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g;
   dt.MONTHS = MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   dt.MNTH = MNTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   dt.DAYS = DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   dt.DY = DY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   dt.AM = AM = 'a.m.';
   dt.PM = PM = 'p.m.';
-  dt.WEEK_START = 0;
-  dt.FORMAT_TOKENS = {
+  dt.WEEK_START = WEEK_START = 0;
+  dt.FORMAT_TOKENS = FORMAT_TOKENS = {
     '%a': function() {
       return DY[this.getDay()];
     },
@@ -183,17 +185,22 @@ define(function() {
       return '';
     }
   };
-  dt.PARSE_RECIPES = {
+  dt.PARSE_RECIPES = PARSE_RECIPES = {
     '%b': function() {
       return {
         re: "" + (dt.MNTH.join('|')),
         fn: function(s, meta) {
-          var mlc, mo, _i, _len, _ref;
-          _ref = dt.MNTH;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            mo = _ref[_i];
-            mlc = mo.toLowerCase();
-          }
+          var mlc, mo;
+          mlc = (function() {
+            var _i, _len, _ref, _results;
+            _ref = dt.MNTH;
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              mo = _ref[_i];
+              _results.push(mo.toLowerCase());
+            }
+            return _results;
+          })();
           return meta.month = mlc.indexOf(s.toLowerCase());
         }
       };
@@ -202,12 +209,17 @@ define(function() {
       return {
         re: "" + (dt.MONTHS.join('|')),
         fn: function(s, meta) {
-          var mlc, mo, _i, _len, _ref;
-          _ref = dt.MONTHS;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            mo = _ref[_i];
-            mlc = mo.toLowerCase();
-          }
+          var mlc, mo;
+          mlc = (function() {
+            var _i, _len, _ref, _results;
+            _ref = dt.MONTHS;
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              mo = _ref[_i];
+              _results.push(mo.toLowerCase());
+            }
+            return _results;
+          })();
           return meta.month = mlc.indexOf(s.toLowerCase());
         }
       };
@@ -362,177 +374,189 @@ define(function() {
     }
   };
   dt.ISO_FORMAT = '%Y-%m-%dT%H:%M:%f';
-  dt.datetime.clone = function(d) {
-    return new Date(d.getTime());
+  dt.datetime = datetime = {
+    clone: function(d) {
+      return new Date(d.getTime());
+    },
+    addDays: function(d, v) {
+      d = datetime.clone(d);
+      d.setDate(d.getDate() + v);
+      return d;
+    },
+    addMonths: function(d, v) {
+      d = datetime.clone(d);
+      d.setMonth(d.getMonth() + v);
+      return d;
+    },
+    addYears: function(d, v) {
+      d = datetime.clone(d);
+      d.setFullYear(d.getFullYear() + v);
+      return d;
+    },
+    resetTime: function(d) {
+      d = datetime.clone(d);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    },
+    today: function() {
+      var d;
+      d = new Date();
+      return datetime.resetTime(d);
+    },
+    thisMonth: function() {
+      var d;
+      d = new Date();
+      d.setDate(1);
+      return datetime.resetTime(d);
+    },
+    thisWeek: function() {
+      var d, diff;
+      d = new Date();
+      diff = d.getDay() - WEEK_START;
+      d.setDate(d.getDate() - diff);
+      return datetime.resetTime(d);
+    },
+    toUTC: function(d) {
+      return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds());
+    }
   };
-  dt.datetime.addDays = function(d, v) {
-    d = this.clone(d);
-    d.setDate(d.getDate() + v);
-    return d;
-  };
-  dt.datetime.addMonths = function(d, v) {
-    d = this.clone(d);
-    d.setMonth(d.getMonth() + v);
-    return d;
-  };
-  dt.datetime.addYears = function(d, v) {
-    d = this.clone(d);
-    d.setFullYear(d.getFullYear() + v);
-    return d;
-  };
-  dt.datetime.resetTime = function(d) {
-    d = this.clone(d);
-    d.setHours(0, 0, 0, 0);
-    return d;
-  };
-  dt.datetime.toUTC = function(d) {
-    return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds());
-  };
-  dt.datetime.today = function() {
-    var d;
-    d = new Date();
-    return this.resetTime(d);
-  };
-  dt.datetime.thisMonth = function() {
-    var d;
-    d = new Date();
-    d.setDate(1);
-    return this.resetTime(d);
-  };
-  dt.datetime.thisWeek = function() {
-    var d, diff;
-    d = new Date();
-    diff = d.getDay() - dt.WEEK_START;
-    d.setDate(d.getDate() - diff);
-    return this.resetTime(d);
-  };
-  dt.datetime.delta = function(d1, d2) {
-    var absD, days, delta, hrs, mins, msecs, secs;
-    d1 = this.clone(d1);
-    d2 = this.clone(d2);
-    delta = d2 - d1;
-    absD = Math.abs(delta);
-    days = absD / 1000 / 60 / 60 / 24;
-    hrs = (days - ~~days) * 24;
-    mins = (hrs - ~~hrs) * 60;
-    secs = (mins - ~~mins) * 60;
-    msecs = (secs - ~~secs) * 1000;
-    return {
-      delta: delta,
-      milliseconds: absD,
-      seconds: Math.ceil(absD / 1000),
-      minutes: Math.ceil(absD / 1000 / 60),
-      hours: Math.ceil(absD / 1000 / 60 / 60),
-      days: Math.ceil(days),
-      composite: [~~days, ~~hrs, ~~mins, ~~secs, msecs]
-    };
-  };
-  dt.datetime.reorder = function() {
-    var d,
-      _this = this;
-    d = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    d.sort(function(d1, d2) {
-      return -_this.delta(d1, d2).delta;
-    });
-    return d;
-  };
-  dt.datetime.isBefore = function(d, d1) {
-    return this.delta(d, d1).delta > 0;
-  };
-  dt.datetime.isAfter = function(d, d1) {
-    return this.delta(d, d1).delta < 0;
-  };
-  dt.datetime.isBetween = function(d, d1, d2) {
-    var _ref;
-    _ref = this.reorder(d1, d2), d1 = _ref[0], d2 = _ref[1];
-    return this.isAfter(d, d1) && this.isBefore(d, d2);
-  };
-  dt.datetime.isDateBefore = function(d, d1) {
-    d = this.resetTime(d);
-    d1 = this.resetTime(d1);
-    return this.isBefore(d, d1);
-  };
-  dt.datetime.isDateAfter = function(d, d1) {
-    d = this.resetTime(d);
-    d1 = this.resetTime(d1);
-    return this.isAfter(d, d1);
-  };
-  dt.datetime.isDateBetween = function(d, d1, d2) {
-    var _ref;
-    d = this.resetTime(d);
-    d1 = this.resetTime(d1);
-    d2 = this.resetTime(d2);
-    _ref = this.reorder(d1, d2), d1 = _ref[0], d2 = _ref[1];
-    return this.isDateAfter(d, d1) && this.isDateBefore(d, d2);
-  };
-  dt.datetime.isLeapYear = function(d) {
-    d = this.clone(d);
-    d.setMonth(1);
-    d.setDate(29);
-    return d.getDate() === 29;
-  };
-  dt.strftime = function(d, format) {
-    var r, token;
-    for (token in dt.FORMAT_TOKENS) {
-      r = new RegExp(token, 'g');
-      format = format.replace(r, function() {
-        return dt.FORMAT_TOKENS[token].call(d);
+  dt.dtdelta = dtdelta = {
+    delta: function(d1, d2) {
+      var absD, days, delta, hrs, mins, msecs, secs;
+      d1 = datetime.clone(d1);
+      d2 = datetime.clone(d2);
+      delta = d2 - d1;
+      absD = Math.abs(delta);
+      days = absD / 1000 / 60 / 60 / 24;
+      hrs = (days - ~~days) * 24;
+      mins = (hrs - ~~hrs) * 60;
+      secs = (mins - ~~mins) * 60;
+      msecs = (secs - ~~secs) * 1000;
+      return {
+        delta: delta,
+        milliseconds: absD,
+        seconds: Math.ceil(absD / 1000),
+        minutes: Math.ceil(absD / 1000 / 60),
+        hours: Math.ceil(absD / 1000 / 60 / 60),
+        days: Math.ceil(days),
+        composite: [~~days, ~~hrs, ~~mins, ~~secs, msecs]
+      };
+    },
+    reorder: function() {
+      var d,
+        _this = this;
+      d = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      d.sort(function(d1, d2) {
+        return d1 - d2;
       });
+      return d;
+    },
+    isBefore: function(d, d1) {
+      return d1 - d > 0;
+    },
+    isAfter: function(d, d1) {
+      return d1 - d < 0;
+    },
+    isBetween: function(d, d1, d2) {
+      var _ref;
+      _ref = dtdelta.reorder(d1, d2), d1 = _ref[0], d2 = _ref[1];
+      return dtdelta.isAfter(d, d1) && dtdelta.isBefore(d, d2);
+    },
+    isDateBefore: function(d, d1) {
+      d = datetime.resetTime(d);
+      d1 = datetime.resetTime(d1);
+      return dtdelta.isBefore(d, d1);
+    },
+    isDateAfter: function(d, d1) {
+      d = datetime.resetTime(d);
+      d1 = datetime.resetTime(d1);
+      return dtdelta.isAfter(d, d1);
+    },
+    isDateBetween: function(d, d1, d2) {
+      var _ref;
+      d = datetime.resetTime(d);
+      d1 = datetime.resetTime(d1);
+      d2 = datetime.resetTime(d2);
+      _ref = dtdelta.reorder(d1, d2), d1 = _ref[0], d2 = _ref[1];
+      return dtdelta.isDateAfter(d, d1) && dtdelta.isDateBefore(d, d2);
+    },
+    isLeapYear: function(d) {
+      d = datetime.clone(d);
+      d.setMonth(1);
+      d.setDate(29);
+      return d.getDate() === 29;
     }
-    return format;
   };
-  dt.strptime = function(s, format) {
-    var converters, d, fn, idx, localOffset, matches, meta, offset, rxp, schr, _i, _j, _len, _len1;
-    rxp = format.replace(/\\/, '\\\\');
-    for (_i = 0, _len = REGEXP_CHARS.length; _i < _len; _i++) {
-      schr = REGEXP_CHARS[_i];
-      rxp = rxp.replace(new RegExp('\\' + schr, 'g'), "\\" + schr);
+  dt.format = format = {
+    strftime: function(d, sformat) {
+      var r, token;
+      for (token in FORMAT_TOKENS) {
+        r = new RegExp(token, 'g');
+        sformat = sformat.replace(r, function() {
+          return FORMAT_TOKENS[token].call(d);
+        });
+      }
+      return sformat;
+    },
+    isoformat: function(d) {
+      d = datetime.toUTC(d);
+      return format.strftime(d, dt.ISO_FORMAT);
     }
-    converters = [];
-    rxp = rxp.replace(PARSE_TOKEN_RE, function(m, token) {
-      var fn, re, _ref;
-      _ref = dt.PARSE_RECIPES[token](), re = _ref.re, fn = _ref.fn;
-      converters.push(fn);
-      return "(" + re + ")";
-    });
-    rxp = new RegExp("^" + rxp + "$", "i");
-    matches = s.match(rxp);
-    if (!matches) {
-      return null;
-    }
-    matches.shift();
-    meta = {
-      year: 0,
-      month: 0,
-      date: 0,
-      hour: 0,
-      minute: 0,
-      second: 0,
-      millisecond: 0,
-      timeAdjust: false,
-      timezone: null
-    };
-    for (idx = _j = 0, _len1 = converters.length; _j < _len1; idx = ++_j) {
-      fn = converters[idx];
-      fn(matches[idx], meta);
-    }
-    d = new Date(meta.year, meta.month, meta.date, (meta.timeAdjust ? hour24(meta.hour) : meta.hour), meta.minute, meta.second, meta.millisecond);
-    if (meta.timezone != null) {
-      localOffset = d.getTimezoneOffset();
-      offset = localOffset - meta.timezone;
-      d.setMinutes(d.getMinutes() + offset);
-    }
-    return d;
   };
-  dt.isoformat = function(d) {
-    d = dt.datetime.toUTC(d);
-    return dt.strftime(d, dt.ISO_FORMAT);
+  dt.parse = parse = {
+    strptime: function(s, sformat) {
+      var converters, d, fn, idx, localOffset, matches, meta, offset, rxp, schr, _i, _j, _len, _len1;
+      rxp = sformat.replace(/\\/, '\\\\');
+      for (_i = 0, _len = REGEXP_CHARS.length; _i < _len; _i++) {
+        schr = REGEXP_CHARS[_i];
+        rxp = rxp.replace(new RegExp('\\' + schr, 'g'), "\\" + schr);
+      }
+      converters = [];
+      rxp = rxp.replace(PARSE_TOKEN_RE, function(m, token) {
+        var fn, re, _ref;
+        _ref = PARSE_RECIPES[token](), re = _ref.re, fn = _ref.fn;
+        converters.push(fn);
+        return "(" + re + ")";
+      });
+      rxp = new RegExp("^" + rxp + "$", "i");
+      matches = s.match(rxp);
+      if (!matches) {
+        return null;
+      }
+      matches.shift();
+      meta = {
+        year: 0,
+        month: 0,
+        date: 0,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+        timeAdjust: false,
+        timezone: null
+      };
+      for (idx = _j = 0, _len1 = converters.length; _j < _len1; idx = ++_j) {
+        fn = converters[idx];
+        fn(matches[idx], meta);
+      }
+      d = new Date(meta.year, meta.month, meta.date, (meta.timeAdjust ? hour24(meta.hour) : meta.hour), meta.minute, meta.second, meta.millisecond);
+      if (meta.timezone != null) {
+        localOffset = d.getTimezoneOffset();
+        offset = localOffset - meta.timezone;
+        d.setMinutes(d.getMinutes() + offset);
+      }
+      return d;
+    },
+    isoparse: function(s) {
+      var d;
+      d = parse.strptime(s, dt.ISO_FORMAT);
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      return d;
+    }
   };
-  dt.isoparse = function(s) {
-    var d;
-    d = this.strptime(s, dt.ISO_FORMAT);
-    d.setMinutes(d.getMinutes() + d.getTimezoneOffset());
-    return d;
-  };
+  dt.strftime = format.strftime;
+  dt.strptime = parse.strptime;
+  dt.isoformat = format.isoformat;
+  dt.isoparse = parse.isoparse;
   return dt;
 });
