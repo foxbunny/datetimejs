@@ -237,7 +237,7 @@ result, though:
     var res = datetime.dtdelta.reorder(d1, d2, d3);
     res.reverse()
 
-_New in 0.3.0_: This method no longer uses `#delta()` internally, so
+_New in 0.3.0:_ This method no longer uses `#delta()` internally, so
 overloading the `#delta()` method will not change its behavior.
 
 
