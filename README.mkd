@@ -502,10 +502,8 @@ run is determined by the order in which tokens appear in the format string.
 The regular expression fragment must have all its backslashes escaped. So,
 instead of typing `'\d'`, you must type `'\\d'`.
 
-_New in 0.3.1_
-
-After minor fixes to the way [variables](#variables) are used internally, it is
-finally possible to add new parse recipes.
+_New in 0.3.1:_ After minor fixes to the way [variables](#variables) are used
+internally, it is finally possible to add new parse recipes.
 
 Let's demonstrate writing a parse function by adding a parse function of the
 new token we've added in the [previous section](#const-formattokens).
