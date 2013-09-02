@@ -128,12 +128,6 @@ define () ->
   # parsing dates and times.
   dt.REGEXP_CHARS = '^$[]().{}+*?|'.split ''
 
-  # ## `datetime.PARSE_TOKEN_RE`
-  #
-  # The regular expression for finding tokens in a format string during
-  # parsing.
-  dt.PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g
-
   # ## `datetime.MONTHS`
   #
   # Month names
@@ -736,9 +730,13 @@ define () ->
       for schr in dt.REGEXP_CHARS
         rxp = rxp.replace new RegExp('\\' + schr, 'g'), "\\#{schr}"
 
+      # Build the regexp for matching parse tokens
+      parseTokens = (key for key of dt.PARSE_RECIPES)
+      parseTokenRe = new RegExp "(#{parseTokens.join '|'})", "g"
+
       # Interpolate the format tokens and obtain converter functions
       converters = []
-      rxp = rxp.replace dt.PARSE_TOKEN_RE, (m, token) ->
+      rxp = rxp.replace parseTokenRe, (m, token) ->
         # Get the token regexp and parser function
         {re, fn} = dt.PARSE_RECIPES[token]()
         converters.push fn

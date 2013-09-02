@@ -73,7 +73,6 @@ define(function() {
   hour24 = dt.utils.hour24;
   dt.DAY_MS = DAY_MS = 86400000;
   dt.REGEXP_CHARS = '^$[]().{}+*?|'.split('');
-  dt.PARSE_TOKEN_RE = /(%[bBdDfHiImMnNpsSryYz])/g;
   dt.MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   dt.MNTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   dt.DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -505,15 +504,24 @@ define(function() {
   };
   dt.parse = parse = {
     strptime: function(s, sformat) {
-      var converters, d, fn, idx, localOffset, matches, meta, offset, rxp, schr, _i, _j, _len, _len1, _ref;
+      var converters, d, fn, idx, key, localOffset, matches, meta, offset, parseTokenRe, parseTokens, rxp, schr, _i, _j, _len, _len1, _ref;
       rxp = sformat.replace(/\\/, '\\\\');
       _ref = dt.REGEXP_CHARS;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         schr = _ref[_i];
         rxp = rxp.replace(new RegExp('\\' + schr, 'g'), "\\" + schr);
       }
+      parseTokens = (function() {
+        var _results;
+        _results = [];
+        for (key in dt.PARSE_RECIPES) {
+          _results.push(key);
+        }
+        return _results;
+      })();
+      parseTokenRe = new RegExp("(" + (parseTokens.join('|')) + ")", "g");
       converters = [];
-      rxp = rxp.replace(dt.PARSE_TOKEN_RE, function(m, token) {
+      rxp = rxp.replace(parseTokenRe, function(m, token) {
         var fn, re, _ref1;
         _ref1 = dt.PARSE_RECIPES[token](), re = _ref1.re, fn = _ref1.fn;
         converters.push(fn);
