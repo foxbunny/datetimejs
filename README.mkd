@@ -5,7 +5,22 @@ This is a shameless (or perhaps shameful) imitation of Python's
 JavaScript. It provides methods for creating, comparing, formatting and parsing
 dates and times.
 
-## Motivation
+ + [Motivation](#motivation)
+ + [Installation](#installation)
+ + [Basic usage](#basic-usage)
+ + [API reference](#api-reference)
+   - [`datetime.strftime`](#api-strftime)
+   - [`datetime.strptime`](#api-strptime)
+   - [`datetime.isoformat`](#api-isoformat)
+   - [`datetime.isoparse`](#api-isoparse)
+ + [Variables](#const)
+   - [`ISO_FORMAT`](#const-isoformat)
+ + [Formatting tokens](#formatting-tokens)
+ + [Parsing tokens](#parsing-tokens)
+ + [Running unit tests](#running-unit-tests)
+ + [Reporting bugs](#reporting-bugs)
+
+## Motivation <a name="motivation"></a>
 
 This library existed a bit longer than it may seem from commit logs and other
 information. It has been sitting on my hard drive much longer than some of the
@@ -20,7 +35,7 @@ not even the first reason that comes to mind. Without going further into
 philosophical discussion, I consider strftime formatting to be superior and I
 want to use it in JavaScript. Period.
 
-## Installation
+## Installation <a name="installation></a>
 
 The `datetime.js` module is in UMD format, and it is usable in both the
 browsers and NodeJS. It has no external dependencies.
@@ -36,7 +51,7 @@ It is also installable with [volo](http://volojs.org/):
 
     volo add foxbunny/datetimejs
 
-## Basic usage
+## Basic usage <a name="basic-usage"></a>
 
 Since the juicy bit is strftime formatting, let's see an example of that first.
 
@@ -85,7 +100,75 @@ Sorting dates is also quite easy:
     );
     // returns [Date(2013, 4, 10), Date(2013, 5, 15), Date(2013, 6, 12)]
 
-## Formatting tokens
+## API reference <a name="api-reference"></a>
+
+This section is a complete API reference for DatetimeJS methods. It is usually
+written after the comments in the source code.
+
+### `datetime.strftime(d, format)` <a name="api-strftime"></a>
+
+Formats date and time. The `d` argument is a JavaScript `Date` object, and
+`format` is an arbitrary  string containing the formatting tokens (see
+[Formatting tokens](#formatting-tokens)).
+
+Example:
+
+    var d = new Date(2013, 8, 21, 12, 10, 32)
+    datetime.strftime(d, 'The date is %D %B %Y');
+    // returns 'The date is 21 September 2013'
+
+### `datetime.strptime(s, format)` <a name="api-strptime"></a>
+
+Parses date and time. This method will parse a string `s` containing a date
+and/or time formatted as `format`. The `format` string is similar to the one
+used in `#strftime()` except that it uses a subset of formatting tokens (see
+[Parsing tokens](#parsing-tokens)).
+
+Example:
+
+    var s = 'The date is 21 September 2013'
+    datetime.strptime(s, 'The date is %D %B %Y')
+    // returns Date(2013, 8, 21, 0, 0, 0, 0)
+
+### `datetime.isoformat(d)` <a name="api-isoformat"></a>
+
+Shortcut for formatting using ISO format. You can change the ISO format you are
+going to be using by changing the [`ISO_FORMAT`](#const-isoformat) variable.
+
+The date is internally converted to UTC before formatting, so the resulting
+timestamp is always in UTC regardless of your platform's local time zone.
+
+### `datetime.isoparse(s)` <a name="api-isoparse"></a>
+
+Shortcut for parsing a string using ISO format. You can change the ISO format
+you are going to be using by changing the [`ISO_FORMAT`](#const-isoformat)
+variable.
+
+The input string is considered to represent a date and time in UTC and is
+compensated for time zone difference between UTC and platform's local time
+zone. The output date time object will always be in local time.
+
+## Variables <a name="const"></a>
+
+Some of DatetimeJS's behavior and output can be customized by changing the
+internal variables. The internal variables are all exposed through the
+`datetime` module. This is done intentionally for customization purposes.
+
+### `ISO_FORMAT` <a name="const-isoformat"></a>
+
+Default is `'%Y-%m-%dT%H:%M:%f'`. You can change it to whatever you like. Some
+of the other common forms are:
+
+ + `'%Y-%m-%dT%H:%M:%S'`
+ + `'%Y-%m-%dT%H:%M:%f%z'`
+ + `'%Y-%m-%dT%H:%M:%S%z'`
+ + `'%Y-%m-%dT%H:%M:%fZ'`
+ + `'%Y-%m-%dT%H:%M%z'`
+
+This variable is used by [`#isoformat()`](#api-isoformat) and
+[`#isoparse()`](#api-isoparse) methods.
+
+## Formatting tokens <a name="formatting-tokens"></a>
 
 The following tokens are recognized by `datetime.strftime`:
 
@@ -121,9 +204,9 @@ If you are coming from Python, you might be used to using `%f` to mean
 microseconds. The same token in DatetimeJS has a different meaning (float
 seconds).
 
-## Parsing tokens
+## Parsing tokens <a name="parsing-tokens"></a>
 
-The following tokens are recognized when parsing:
+The following tokens are recognized when parsing with `datetime.strptime`:
 
  + %b - Short month name (e.g., 'Jan', 'Feb'...)
  + %B - Full month name (e.g., 'January', 'February'...)
@@ -148,13 +231,7 @@ The `%z` token behaves slightly differently when parsing date and time strings.
 In addition to formats that strftime outputs, it also supports 'Z', which
 allows parsing of ISO timestamps.
 
-## API documentation
-
-Yes, on TODO list. Meanwhile, look at the CoffeeScript source in the `src`
-directory (no, really, just read the comments, even if you don't know any
-CoffeeScript).
-
-## Running unit tests
+## Running unit tests <a name="running-unit-tests"></a>
 
 For in-browser testing, simply open the `index.html` located in the `tests`
 directory. 
