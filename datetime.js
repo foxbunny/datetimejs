@@ -500,6 +500,19 @@ define(function() {
     isoformat: function(d) {
       d = datetime.toUTC(d);
       return format.strftime(d, dt.ISO_FORMAT);
+    },
+    reformat: function(s, input, output) {
+      var d;
+      if (output == null) {
+        output = input;
+        input = null;
+      }
+      if (input == null) {
+        d = parse.isoparse(s);
+      } else {
+        d = parse.strptime(s, input);
+      }
+      return format.strftime(d, output);
     }
   };
   dt.parse = parse = {
@@ -567,5 +580,6 @@ define(function() {
   dt.strptime = parse.strptime;
   dt.isoformat = format.isoformat;
   dt.isoparse = parse.isoparse;
+  dt.reformat = format.reformat;
   return dt;
 });

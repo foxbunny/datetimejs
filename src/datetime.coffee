@@ -637,7 +637,7 @@ define () ->
   #############################################################################
 
   dt.format = format =
-    # ## `datetime.dtformat.strftime(d, sformat)`
+    # ## `datetime.format.strftime(d, sformat)`
     #
     # Formats `d` object using `sformat`. The formatting uses
     # strftime-compatible syntax with follwing tokens:
@@ -682,12 +682,31 @@ define () ->
           dt.FORMAT_TOKENS[token].call(d)
       sformat
 
-    # ## datetime.dtformat.isoformat(d)
+    # ## datetime.format.isoformat(d)
     #
     # Returns the ISO formatted date `d` in UTC timezone.
     isoformat: (d) ->
       d = datetime.toUTC(d)
       format.strftime(d, dt.ISO_FORMAT)
+
+    # ## datetime.format.reformat(s, [input,] output)
+    #
+    # Converts a string date/time representation from `input` format to
+    # `output` format.
+    #
+    # The `input` format is optional. If not specified, it will use
+    # `datetime.isoparse` to parse the string.
+    #
+    reformat: (s, input, output) ->
+      if not output?
+        output = input
+        input = null
+      if not input?
+        d = parse.isoparse s
+      else
+        d = parse.strptime s, input
+      format.strftime d, output
+
 
   #############################################################################
   # `parse` SUBMODULE
@@ -695,7 +714,7 @@ define () ->
 
   dt.parse = parse =
 
-    # ## `datetime.dtparse.strptime(s, sformat)`
+    # ## `datetime.parse.strptime(s, sformat)`
     #
     # Parse a string `s` and return a `Date` object. The `sformat` string is
     # used to specify the format in which `s` date is represented.
@@ -789,7 +808,7 @@ define () ->
 
       d
 
-    # ## datetime.dtparse.isoparse(s)
+    # ## datetime.parse.isoparse(s)
     #
     # Return a `Date` object parsed from ISO-formatted date `s`.
     isoparse: (s) ->
@@ -803,6 +822,7 @@ define () ->
   dt.strptime = parse.strptime
   dt.isoformat = format.isoformat
   dt.isoparse = parse.isoparse
+  dt.reformat = format.reformat
 
   dt
 
