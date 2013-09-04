@@ -104,3 +104,19 @@ describe 'datetime.format', () ->
       # Compensate for local timezone
       d.setMinutes d.getMinutes() - d.getTimezoneOffset()
       assert.equal datetime.isoformat(d), '2013-09-01T16:00:00.00'
+
+  describe '#reformat()', () ->
+    it 'should reformat date', () ->
+      s = '12 May 2013'
+      assert.equal datetime.reformat(s, '%D %B %Y', '%Y-%m-%d'), '2013-05-12'
+
+    it 'should isoparse if only output format is specified', () ->
+      s = '2013-05-12T12:00:00.00'
+      origIsoparse = datetime.parse.isoparse
+      isoparseArgs = []
+      datetime.parse.isoparse = (args...) ->
+        isoparseArgs = args
+        origIsoparse args...
+      datetime.reformat(s, '%Y %B %d')
+      assert.deepEqual isoparseArgs, [s]
+      datetime.parse.isoparse = origIsoparse

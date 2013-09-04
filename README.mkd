@@ -310,6 +310,19 @@ timestamp is always in UTC regardless of your platform's local time zone.
 This method is aliased as `datetime.isoformat` for convenience.
 
 
+### `#reformat(s, [input,] output)` <a name="api-reformat"></a>
+
+Reformats the string `s` from input format to output format.
+
+Input format is optional and this method will defer to 
+`datetime.parse.isoparse()` if `input` is not specified.
+
+Example:
+
+    var s = '12 May 2013'
+    datetime.reformat(s, '%D %B %Y', '%Y-%m-%d')
+    // returns '2013-05-12'
+
 ### `datetime.parse`
 
 This submodule contains methods for parsing dates and times.
