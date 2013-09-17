@@ -65,11 +65,18 @@ describe('datetime.parse', function() {
       }
       return _results;
     });
-    return it('should parse decimal seconds', function() {
+    it('should parse decimal seconds', function() {
       var d;
       d = datetime.strptime('2013-12-01 12:00:01.12', '%Y-%m-%d %H:%M:%f');
       assert.equal(d.getSeconds(), 1);
       return assert.equal(d.getMilliseconds(), 120);
+    });
+    return it('should parse AM PM', function() {
+      var d;
+      d = datetime.strptime('2013-12-01 09:00 a.m.', '%Y-%m-%d %I:%M %p');
+      assert.equal(d.getHours(), 9);
+      d = datetime.strptime('2013-12-01 09:00 p.m.', '%Y-%m-%d %I:%M %p');
+      return assert.equal(d.getHours(), 21);
     });
   });
   return describe('#isoparse()', function() {

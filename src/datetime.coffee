@@ -792,7 +792,7 @@ define () ->
       d = new Date meta.year,
         meta.month,
         meta.date,
-        (if meta.timeAdjust then hour24(meta.hour) else meta.hour),
+        (if meta.timeAdjust then hour24(meta.hour + 12) else meta.hour),
         meta.minute,
         meta.second,
         meta.millisecond

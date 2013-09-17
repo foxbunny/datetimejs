@@ -561,7 +561,7 @@ define(function() {
         fn = converters[idx];
         fn(matches[idx], meta);
       }
-      d = new Date(meta.year, meta.month, meta.date, (meta.timeAdjust ? hour24(meta.hour) : meta.hour), meta.minute, meta.second, meta.millisecond);
+      d = new Date(meta.year, meta.month, meta.date, (meta.timeAdjust ? hour24(meta.hour + 12) : meta.hour), meta.minute, meta.second, meta.millisecond);
       if (meta.timezone != null) {
         localOffset = d.getTimezoneOffset();
         offset = localOffset - meta.timezone;

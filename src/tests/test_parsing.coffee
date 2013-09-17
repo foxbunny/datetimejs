@@ -42,6 +42,12 @@ describe 'datetime.parse', () ->
       assert.equal d.getSeconds(), 1
       assert.equal d.getMilliseconds(), 120
 
+    it 'should parse AM PM', () ->
+      d = datetime.strptime '2013-12-01 09:00 a.m.', '%Y-%m-%d %I:%M %p'
+      assert.equal d.getHours(), 9
+      d = datetime.strptime '2013-12-01 09:00 p.m.', '%Y-%m-%d %I:%M %p'
+      assert.equal d.getHours(), 21
+
   describe '#isoparse()', () ->
     it 'should parse date in ISO format', () ->
       d = datetime.isoparse '2013-09-01T16:00:00.00'
