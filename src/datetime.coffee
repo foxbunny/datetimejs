@@ -101,9 +101,11 @@ define () ->
     # Converts the `h` hour into 24-hour format. The `pm` is `true` if the hour
     # is PM.
     hour24: (h, pm) ->
-      return h if not pm
-      h += 12
-      if h is 24 then 0 else h
+      return h if not pm and h isnt 12
+      if h is 12
+        if pm then 12 else 0
+      else
+        h += if pm then 12 else 0
 
   # Alias for easier access
   zeroPad = dt.utils.zeroPad
@@ -781,18 +783,21 @@ define () ->
         minute: 0
         second: 0
         millisecond: 0
-        timeAdjust: false
+        timeAdjust: null
         timezone: null
 
       # Iterate parser functions and apply the function to each match
       for fn, idx in converters
         fn matches[idx], meta
 
+      if meta.timeAdjust isnt null
+        meta.hour = hour24(meta.hour, meta.timeAdjust)
+
       # Create the `Date` object using meta data
       d = new Date meta.year,
         meta.month,
         meta.date,
-        (if meta.timeAdjust then hour24(meta.hour + 12) else meta.hour),
+        meta.hour,
         meta.minute,
         meta.second,
         meta.millisecond

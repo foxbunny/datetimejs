@@ -57,14 +57,17 @@ define(function() {
       return i % max || (zeroIndex ? 0 : max);
     },
     hour24: function(h, pm) {
-      if (!pm) {
+      if (!pm && h !== 12) {
         return h;
       }
-      h += 12;
-      if (h === 24) {
-        return 0;
+      if (h === 12) {
+        if (pm) {
+          return 12;
+        } else {
+          return 0;
+        }
       } else {
-        return h;
+        return h += pm ? 12 : 0;
       }
     }
   };
@@ -554,14 +557,17 @@ define(function() {
         minute: 0,
         second: 0,
         millisecond: 0,
-        timeAdjust: false,
+        timeAdjust: null,
         timezone: null
       };
       for (idx = _j = 0, _len1 = converters.length; _j < _len1; idx = ++_j) {
         fn = converters[idx];
         fn(matches[idx], meta);
       }
-      d = new Date(meta.year, meta.month, meta.date, (meta.timeAdjust ? hour24(meta.hour + 12) : meta.hour), meta.minute, meta.second, meta.millisecond);
+      if (meta.timeAdjust !== null) {
+        meta.hour = hour24(meta.hour, meta.timeAdjust);
+      }
+      d = new Date(meta.year, meta.month, meta.date, meta.hour, meta.minute, meta.second, meta.millisecond);
       if (meta.timezone != null) {
         localOffset = d.getTimezoneOffset();
         offset = localOffset - meta.timezone;

@@ -37,3 +37,10 @@ describe 'datetime.utils', () ->
     it 'should handle a 0 normally', () ->
       assert.equal datetime.utils.zeroPad(0, 5, 2), '00.00'
 
+  describe '#hour24', () ->
+    it 'should correctly convert to 24-hour format', () ->
+      assert.equal datetime.utils.hour24(3), 3
+      assert.equal datetime.utils.hour24(5, true), 17
+      assert.equal datetime.utils.hour24(12), 0
+      assert.equal datetime.utils.hour24(12, true), 12
+

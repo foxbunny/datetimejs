@@ -9,7 +9,7 @@ if (typeof require !== "undefined" && require !== null) {
 assert = chai.assert;
 
 describe('datetime.utils', function() {
-  return describe('#zeroPad()', function() {
+  describe('#zeroPad()', function() {
     it('should generate total of 4 digits when called with 4', function() {
       var i, s;
       i = 10;
@@ -43,6 +43,14 @@ describe('datetime.utils', function() {
     });
     return it('should handle a 0 normally', function() {
       return assert.equal(datetime.utils.zeroPad(0, 5, 2), '00.00');
+    });
+  });
+  return describe('#hour24', function() {
+    return it('should correctly convert to 24-hour format', function() {
+      assert.equal(datetime.utils.hour24(3), 3);
+      assert.equal(datetime.utils.hour24(5, true), 17);
+      assert.equal(datetime.utils.hour24(12), 0);
+      return assert.equal(datetime.utils.hour24(12, true), 12);
     });
   });
 });
