@@ -1,5 +1,11 @@
 # DatetimeJS changelog
 
+## 0.3.4
+
+### Fixed `hour24` utility
+
+It was broken when hour is 12. Now all fixes.
+
 ## 0.3.3
 
 ### Fixed parsing of the `%p` token
