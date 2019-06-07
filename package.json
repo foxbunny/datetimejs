@@ -11,10 +11,10 @@
     "server",
     "browser"
   ],
-  "author": "Branko Vukelic <branko@brankovukelic.com>",
+  "author": "Hajime Yamasaki Vukelic <hayavuk@gmail.com>",
   "bugs": {
     "url": "https://github.com/foxbunny/datetimejs/issues",
-    "email": "branko@brankovukelic.com"
+    "email": "hayavuk@gmail.com"
   },
   "license": {
     "type": "MIT",
