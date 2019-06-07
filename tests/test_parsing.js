@@ -71,12 +71,28 @@ describe('datetime.parse', function() {
       assert.equal(d.getSeconds(), 1);
       return assert.equal(d.getMilliseconds(), 120);
     });
-    return it('should parse AM PM', function() {
+    it('should parse AM PM', function() {
       var d;
       d = datetime.strptime('2013-12-01 09:00 a.m.', '%Y-%m-%d %I:%M %p');
       assert.equal(d.getHours(), 9);
       d = datetime.strptime('2013-12-01 09:00 p.m.', '%Y-%m-%d %I:%M %p');
       return assert.equal(d.getHours(), 21);
+    });
+    it('should parse only with year (without date or month)', function() {
+      var d;
+      d = datetime.strptime("2013", '%Y');
+      return assert.equal(d.getFullYear(), 2013);
+    });
+    return it('should parse only with short month names and year (without date)', function() {
+      var d, idx, month, _i, _len, _ref, _results;
+      _ref = datetime.MNTH;
+      _results = [];
+      for (idx = _i = 0, _len = _ref.length; _i < _len; idx = ++_i) {
+        month = _ref[idx];
+        d = datetime.strptime("" + month + " 2013", '%b %Y');
+        _results.push(assert.equal(d.getMonth(), idx));
+      }
+      return _results;
     });
   });
   return describe('#isoparse()', function() {

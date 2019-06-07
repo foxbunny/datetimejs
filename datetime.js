@@ -552,7 +552,7 @@ define(function() {
       meta = {
         year: 0,
         month: 0,
-        date: 0,
+        date: 1,
         hour: 0,
         minute: 0,
         second: 0,
