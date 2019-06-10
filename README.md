@@ -129,7 +129,13 @@ Details about these modules and functions can be found in the documentation.
 ## Documentation
 
 The generated documentation is available in the `docs` directory within the
-source tree.
+source tree. To generate the documentation run:
+
+```bash
+yarn docs
+```
+
+You can also read it [online](http://foxbunny.github.io/datetimejs/).
 
 ## Migrating from pre-1.0.0 versions
 
@@ -153,3 +159,15 @@ The `DAY_MS` variable is no longer configurable as there is no need for that.
 Some functions that are trivially replicated using simpler JavaScript or can be 
 derived from other functions in this library have been removed completely.
 Please refer to the 1.0.0 changelog for migration strategies.
+
+## Contributing
+
+Please file issues in the [online issue
+tracker](https://github.com/foxbunny/datetimejs/issues). Pull requests are also
+welcome. The repository can be found [on
+GitHub](https://github.com/foxbunny/datetimejs/).
+
+## License
+
+The project's sources are made available to you under the terms of the MIT
+license. Please see the [LICENSE](./LICENSE) file in the source tree.
