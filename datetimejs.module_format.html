@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>format - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="datetimejs.module_config.html">config</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_config.html#.updateDefaultConfig">updateDefaultConfig</a></li></ul></li><li><a href="datetimejs.module_datetime.html">datetime</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_datetime.html#.addDays">addDays</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addDelta">addDelta</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addMonths">addMonths</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addYears">addYears</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.clone">clone</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.resetTime">resetTime</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.resetWeek">resetWeek</a></li></ul></li><li><a href="datetimejs.module_dtdelta.html">dtdelta</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_dtdelta.html#.createDelta">createDelta</a></li><li data-type='method'><a href="datetimejs.module_dtdelta.html#.delta">delta</a></li><li data-type='method'><a href="datetimejs.module_dtdelta.html#.isLeapYear">isLeapYear</a></li></ul></li><li><a href="datetimejs.module_format.html">format</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_format.html#.strftime">strftime</a></li></ul></li><li><a href="datetimejs.module_parse.html">parse</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_parse.html#.strptime">strptime</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">format</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="format.js.html">format.js</a>, <a href="format.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description"><p>Date and time formatting</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".FORMAT_TOKENS"><span class="type-signature">(static) </span>FORMAT_TOKENS<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="format.js.html">format.js</a>, <a href="format.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Functions for formatting Date objects</p>
+<p>This object maps format tokens to formatting functions. This object is used
+by <code>strftime()</code> to perform the formatting. It can also be manipulated to
+modify and/or enhance the way <code>stftime()</code> formats date and time.</p>
+<p>To add a new token, we first decide on the actual token we want to use, or
+whther we want to override an existing one. Then we assign a format function
+to that key.</p>
+<p>The format functions take two arguments, the <code>Date</code> object to format, and
+the configuration object.</p>
+</div>
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>format.FORMAT_TOKENS['%R'] = function romanYear(dt, conf) {
+  // Do something with `dt` and/or `conf` and return a string...
+};</code></pre>
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".strftime"><span class="type-signature">(static) </span>strftime<span class="signature">(dt, formatString, config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="format.js.html">format.js</a>, <a href="format.js.html#line253">line 253</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Format a <code>Date</code> object according to a format string</p>
+<p>The formatting uses strftime-compatible syntax with follwing tokens:</p>
+<ul>
+<li><code>%a</code> - short week day name (e.g. 'Sun', 'Mon'...).</li>
+<li><code>%A</code> - long week day name (e.g., 'Sunday', 'Monday'...).</li>
+<li><code>%b</code> - short month name (e.g., 'Jan', 'Feb'...).</li>
+<li><code>%B</code> - full month name (e.g., 'January', 'February'...).</li>
+<li><code>%c</code> - locale-formatted date and time (platform-dependent).</li>
+<li><code>%d</code> - zero-padded date (e.g, 02, 31...).</li>
+<li><code>%D</code> - non-zero-padded date (e.g., 2, 31...).</li>
+<li><code>%f</code> - zero-padded decimal seconds (e.g., 04.23, 23.50).</li>
+<li><code>%H</code> - zero-padded hour in 24-hour format (e.g., 8, 13, 0...).</li>
+<li><code>%i</code> - non-zero-padded hour in 12-hour format (e.g., 8, 1, 12...).</li>
+<li><code>%I</code> - zero-padded hour in 12-hour format (e.g., 08, 01, 12...).</li>
+<li><code>%j</code> - zero-padded day of year (e.g., 002, 145, 364...).</li>
+<li><code>%m</code> - zero-padded month (e.g., 01, 02...).</li>
+<li><code>%M</code> - zero-padded minutes (e.g., 01, 12, 59...).</li>
+<li><code>%n</code> - non-zero-padded month (e.g., 1, 2...).</li>
+<li><code>%N</code> - non-zero-padded minutes (e.g., 1, 12, 59).</li>
+<li><code>%p</code> - aM/PM (a.m. and p.m.).</li>
+<li><code>%s</code> - non-zero-padded seconds (e.g., 1, 2, 50...).</li>
+<li><code>%S</code> - zero-padded seconds (e.g., 01, 02, 50...).</li>
+<li><code>%r</code> - milliseconds (e.g., 1, 24, 500...).</li>
+<li><code>%w</code> - numeric week day where 0 is Sunday (e.g., 0, 1...).</li>
+<li><code>%y</code> - zero-padded year without the century part (e.g., 01, 13, 99...).</li>
+<li><code>%Y</code> - full year (e.g., 2001, 2013, 2099...).</li>
+<li><code>%z</code> - timezone in +HHMM or -HHMM format (e.g., +0200, -0530).</li>
+<li><code>%x</code> - locale-formatted date (platform dependent).</li>
+<li><code>%X</code> - locale-formatted time (platform dependent).</li>
+<li><code>%%</code> - literal percent character %.</li>
+</ul>
+<p>Any characters that are not part of the %-something sequence are used as is
+in the final output.</p>
+<p>The third and optional argument is the format configuration object. This
+object is used to customize the human-readable strings used in the output,
+such as month names and similar. Please refer to
+<code>config.updateDefaultConfig()</code> function's documentation for information on
+what this object may contain.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let d = new Date(2009, 4, 1, 12, 33);
+
+// US date format
+strftime(d, '%n/%D/%Y'); // '5/1/2019'
+
+// Using non-formatting characters
+strftime(d, 'On %b %D at %i:%M %p'); // 'On May 1 at 12:33 p.m.'
+
+// With 24-hour time
+strftime(d, '%Y-%m-%d %H:%M'); // '2019-05-01 12:33'
+
+// With localized short month names (this configuration is only used for
+// this particular call, and the global defaults are not modified)
+const srMnth = ['јан', 'феб', 'мар', 'апр', 'мај', 'јун', 'јул', 'авг',
+  'сеп', 'окт', 'нов', 'дец'];
+strftime(d, '%D. %b %Y.', {MNTH: srMnth}); // '1. мај 2019.'</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The <code>Date</code> object to format</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>formatString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The format of the output</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Format configuration</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.2</a> on Mon Jun 10 2019 12:33:08 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>datetime - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="datetimejs.module_config.html">config</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_config.html#.updateDefaultConfig">updateDefaultConfig</a></li></ul></li><li><a href="datetimejs.module_datetime.html">datetime</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_datetime.html#.addDays">addDays</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addDelta">addDelta</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addMonths">addMonths</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addYears">addYears</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.clone">clone</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.resetTime">resetTime</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.resetWeek">resetWeek</a></li></ul></li><li><a href="datetimejs.module_dtdelta.html">dtdelta</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_dtdelta.html#.createDelta">createDelta</a></li><li data-type='method'><a href="datetimejs.module_dtdelta.html#.delta">delta</a></li><li data-type='method'><a href="datetimejs.module_dtdelta.html#.isLeapYear">isLeapYear</a></li></ul></li><li><a href="datetimejs.module_format.html">format</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_format.html#.strftime">strftime</a></li></ul></li><li><a href="datetimejs.module_parse.html">parse</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_parse.html#.strptime">strptime</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">datetime</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="datetime.js.html">datetime.js</a>, <a href="datetime.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description"><p><code>Date</code> object creation and manipulation functions</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".addDays"><span class="type-signature">(static) </span>addDays<span class="signature">(dt, days)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="datetime.js.html">datetime.js</a>, <a href="datetime.js.html#line54">line 54</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Create a clone of a <code>Date</code> object with specified number of days added</p>
+<p>As the days are added, the date object is correctly adjusted for month and
+year. For example, adding 31 days to a Date object will result in a date
+object that is also one or two months ahead as well.</p>
+<p>Negative number of days can also be added in which case days are shifted
+bakcwards.</p>
+<p>It is not recommended to use this method to add months or years to a date
+object. Adding different parts of the date has different edge cases.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let d = new Date(2019, 4, 15);
+
+let d1 = datetime.addDays(d, 4); // => new Date(2019, 4, 19)
+let d2 = datetime.addDays(d, -4); // => new Date(2019, 4, 11)
+
+// Cross the month boundary
+let d3 = datetime.addDays(d, 20); // => new Date(2019, 5, 4);</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The input date</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>days</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of days to add</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".addDelta"><span class="type-signature">(static) </span>addDelta<span class="signature">(dt, delta)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="datetime.js.html">datetime.js</a>, <a href="datetime.js.html#line144">line 144</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Create a clone of a <code>Date</code> object with time shifted by the specified delta</p>
+<p>The delta object does not have to be complete. As long as it has a numeric
+<code>delta</code> property, it will work.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let d = new Date(2019, 4, 15, 12, 23);
+
+// Add 5 minutes
+let dlt1 = dtdelta.createDelta(5 * 60 * 1000);
+let dt1 = dateitme.addDelta(d, dlt1); // => new Date(2019, 4, 15, 12, 28)
+
+// Subtract 10 hours
+let dlt2 = dtdelta.createDelta(10 * 60 * 60 * 1000);
+let dt2 = datetime.addDelta(d, dlt2); // => new Date(2019, 4, 15, 2, 23)
+
+// We can cheat and use any object with `delta` property
+let dlt3 = {delta: 10800000} // 3 hours
+let dt3 = datetime.addDelta(d, dlt3); // => new Date(2019, 4, 14, 15, 23)</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The input date</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>delta</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The delta object (e.g., created by <code>createDelta()</code>)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".addMonths"><span class="type-signature">(static) </span>addMonths<span class="signature">(dt, months)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="datetime.js.html">datetime.js</a>, <a href="datetime.js.html#line87">line 87</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Create a clone of a <code>Date</code> object with a specified number of months added</p>
+<p>As the months are added, the date object is correctly adjusted for year and
+date. For instance, adding one month to a December date object will result
+in year shifting by one as well.</p>
+<p>Negative number of months can also be added, in which case the date is
+shifted backwards.</p>
+<p><strong>CAVEAT:</strong> This method will have unexpected behavior when the date of the
+<code>Date</code> object is outside the range of dates in the target month.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let d = new Date(2019, 4, 15);
+
+let d1 = datetime.addMonths(d, 4); // => new Date(2019, 8, 15);
+let d2 = datetime.addMonths(d, -2); // => new Date(2019, 2, 15);
+
+// Edge case demonstration (see caveat in the description)
+let d3 = new Date(2019, 0, 31);
+let d4 = datetime.addMonths(d3, 1); // => new Date(2019, 2, 3);</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The input date</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>months</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of months to add</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".addYears"><span class="type-signature">(static) </span>addYears<span class="signature">(dt, years)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="datetime.js.html">datetime.js</a>, <a href="datetime.js.html#line113">line 113</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Create a clone of a <code>Date</code> object with a specified number of years added</p>
+<p>When the years are added, the date object is adjusted for possible changes
+in the date. For example, if we are on Feb 29 of a leap year, and we add one
+year, we end up on Mar 1 of the next year.</p>
+<p>Negative number of years can be added, and then the object is shifted
+backwards.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let d = new Date(2019, 4, 15);
+
+let d1 = datetime.addYears(d, 3); // => new Date(2022, 4, 15);
+let d2 = datetime.addYears(d, -1); // => new Date(2018, 4, 15);</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The input date</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>years</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of years to add</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".clone"><span class="type-signature">(static) </span>clone<span class="signature">(dt)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="datetime.js.html">datetime.js</a>, <a href="datetime.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Clone a <code>Date</code> object</p>
+<p>Creates a copy of a <code>Date</code> object that points to the exact same time.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let dt = new Date(2019, 8, 1, 14, 2);
+let dt1 = datetime.clone(dt);
+
+dt.getTime() === dt1.getTime(); // true
+dt === dt1; // false</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p><code>Date</code> object to clone</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".resetTime"><span class="type-signature">(static) </span>resetTime<span class="signature">(dt)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="datetime.js.html">datetime.js</a>, <a href="datetime.js.html#line166">line 166</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Create a clone of a <code>Date</code> object with the time reset to 0 (local time)</p>
+<p><strong>TIP:</strong> JavaScript does not have &quot;pure&quot; date objects. The <code>Date</code> object,
+despite its name, also contains the time. Furthermore, it is always in local
+time.  Because of this, when we are dealing with date alone, this is not the
+ideal object to use. It is recommended to create your own class for dates,
+or use strings in a specific format.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let d = new Date(2019, 4, 15, 12, 23);
+let d1 = dateitme.resetTime(d); // => new Date(2019, 4, 15, 0, 0)</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The input date</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".resetWeek"><span class="type-signature">(static) </span>resetWeek<span class="signature">(dt, config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="datetime.js.html">datetime.js</a>, <a href="datetime.js.html#line197">line 197</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Create a clone of a <code>Date</code> object with date reset to the start of the week</p>
+<p>The first day of the week is taken from the configuration object, which
+defaults to <code>DEFAULT_CONFIG</code>. The <code>WEEK_START</code> configuration option is a
+number between 0 and 6, where 0 is Sunday, 1 is Monday, and so on, through 6
+as Saturday.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let d = new Date(2019, 4, 15);
+
+// Reset to previous Sunday (default)
+let d1 = datetime.resetWeek(d); // => new Date(2019, 4, 12)
+
+// Use Monday as custom week start
+let conf = {WEEK_START: 1};
+let d2 = datetime.resetWeek(d, conf); // => new Date(2019, 4, 13)</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The input date</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>DEFAULT_CONFIG</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional configuration object</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.2</a> on Mon Jun 10 2019 12:33:08 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

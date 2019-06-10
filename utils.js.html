@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>utils.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="datetimejs.module_config.html">config</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_config.html#.updateDefaultConfig">updateDefaultConfig</a></li></ul></li><li><a href="datetimejs.module_datetime.html">datetime</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_datetime.html#.addDays">addDays</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addDelta">addDelta</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addMonths">addMonths</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addYears">addYears</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.clone">clone</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.resetTime">resetTime</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.resetWeek">resetWeek</a></li></ul></li><li><a href="datetimejs.module_dtdelta.html">dtdelta</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_dtdelta.html#.createDelta">createDelta</a></li><li data-type='method'><a href="datetimejs.module_dtdelta.html#.delta">delta</a></li><li data-type='method'><a href="datetimejs.module_dtdelta.html#.isLeapYear">isLeapYear</a></li></ul></li><li><a href="datetimejs.module_format.html">format</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_format.html#.strftime">strftime</a></li></ul></li><li><a href="datetimejs.module_parse.html">parse</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_parse.html#.strptime">strptime</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">utils.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Utility functions
+ *
+ * @module datetimejs.utils
+ * @ignore
+ */
+
+/**
+ * Lower-cases a string
+ *
+ * @param {string} s Input string
+ */
+export function lower(s) {
+  return s.toLowerCase();
+}
+
+/**
+ * Zero-pad a number
+ *
+ * @param {number} n The number to pad
+ * @param {number} digits The total number of digits, defualts to 3
+ * @param {number|boolean} tail Number of digits to use when padding the tail,
+ * or `false` to treat both the tail and the fractional point as part of the
+ * digits, defaults to `false`
+ */
+export function zeroPad(n, digits = 3, tail = false) {
+  if (tail === false) {
+    return ((new Array(digits)).join('0') + n).slice(-digits);
+  }
+
+  else {
+    // Split the number into head and tail
+    let [hd, tl = '0'] = n.toString().split('.');
+    if (tail === 0) {
+      // Strip out the tail (basically floor() the number)
+      return zeroPad(hd, digits - tail, false);
+    } else {
+      // Pad the head side
+      hd = zeroPad(hd, digits - 1 - tail, false);
+      // Pad the tail side
+      tl = zeroPad(tl.split('').reverse().join(''), tail, false);
+      tl = tl.split('').reverse().join('');
+      // Join the head and tail together
+      return [hd, tl].join('.');
+    }
+  }
+};
+
+/**
+ * Fits the number inside a range
+ *
+ * For numbers `n` and `max`, returns a number that is always within a range
+ * between either `0` and `max - 1` or `1` and `max`. The number is calculated
+ * using a modulo, where modulo 0 is treated as 0 if `zeroIndex` is a truthy
+ * value, and `max` otherwise.
+ *
+ * For example, let's say we have an hour in 24-hour format, like 15. We want
+ * to get 3, which is 3 PM. We would call cycle like this:
+ *
+ *     cycle(15, 12);
+ *
+ * @param {number} n Number for which to calculate the output
+ * @param {number} max The maximum value (interpretation depends on `zeroPad`)
+ * @param {number} zeroIndex Whether to treat the range as `0 ~ max - 1` or
+ * `1 ~ max`
+ */
+export function cycle(n, max, zeroIndex = false) {
+  return n % max || (zeroIndex ? 0 : max);
+};
+
+/**
+ * Convert a 12-hour format hour to 24-hour
+ *
+ * @param {number} h The number of hours
+ * @param {boolean} pm Whether hours are in PM, defaults to `false`
+ */
+export function h12to24(h, pm = false) {
+  h = cycle(h, 12, true);
+  if (pm) {
+    return h + 12;
+  }
+  return h;
+};
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.2</a> on Mon Jun 10 2019 12:33:08 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

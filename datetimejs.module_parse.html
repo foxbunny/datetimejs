@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>parse - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="datetimejs.module_config.html">config</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_config.html#.updateDefaultConfig">updateDefaultConfig</a></li></ul></li><li><a href="datetimejs.module_datetime.html">datetime</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_datetime.html#.addDays">addDays</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addDelta">addDelta</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addMonths">addMonths</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.addYears">addYears</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.clone">clone</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.resetTime">resetTime</a></li><li data-type='method'><a href="datetimejs.module_datetime.html#.resetWeek">resetWeek</a></li></ul></li><li><a href="datetimejs.module_dtdelta.html">dtdelta</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_dtdelta.html#.createDelta">createDelta</a></li><li data-type='method'><a href="datetimejs.module_dtdelta.html#.delta">delta</a></li><li data-type='method'><a href="datetimejs.module_dtdelta.html#.isLeapYear">isLeapYear</a></li></ul></li><li><a href="datetimejs.module_format.html">format</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_format.html#.strftime">strftime</a></li></ul></li><li><a href="datetimejs.module_parse.html">parse</a><ul class='methods'><li data-type='method'><a href="datetimejs.module_parse.html#.strptime">strptime</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">parse</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="parse.js.html">parse.js</a>, <a href="parse.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description"><p>Date and time parsing</p></div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".PARSE_RECIPES"><span class="type-signature">(static) </span>PARSE_RECIPES<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="parse.js.html">parse.js</a>, <a href="parse.js.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Recipes for parsing the date</p>
+<p>A recipe consists of a regular expression fragment (string) and a parsing
+function. This object maps parse tokens to factory functions that take a
+format configuration object and returns a recipe.</p>
+<p>The recipes are represented by an object with <code>re</code> and <code>fn</code> keys. The <code>re</code>
+key is a string that represents a regular expression fragment that will
+match any valid data for the token. The <code>fn</code> function takes the string
+matched by the regular expression fragment, and an object that tracks the
+progress of various values that were parsed. The function should examine the
+string and update the progress object.</p>
+<p>To add a recipe for a new token, or override a recipe for an existing one,
+we simply assign to the corresponding key on the <code>parse.PARSE_RECIPES</code>
+object.</p>
+</div>
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>parse.PARSE_RECIPES['%R'] = function (conf) {
+  return {
+    re: '....',
+    fn: function (s, parsedValues) {
+      // do something with `s` and update `parsedValues`
+    },
+  };
+};</code></pre>
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".strptime"><span class="type-signature">(static) </span>strptime<span class="signature">(s, formatString, config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="parse.js.html">parse.js</a>, <a href="parse.js.html#line278">line 278</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Parse a date/time string according to a format string</p>
+<p>The return value is a <code>Date</code> object or <code>null</code> if the input does not match
+the format string.</p>
+<p>The <code>Date</code> object is always in the local time zone, but if time zone offset
+appears in the string, it will be taken into account and the resulting
+object adjusted accordingly.</p>
+<p>The format string is an arbitrary string that contains format sequences</p>
+<ul>
+<li><code>%b</code> - Short month name (e.g., 'Jan', 'Feb'...).</li>
+<li><code>%B</code> - Full month name (e.g., 'January', 'February'...).</li>
+<li><code>%d</code> - Zero-padded date (e.g, 02, 31...).</li>
+<li><code>%D</code> - Non-zero-padded date (e.g., 2, 31...).</li>
+<li><code>%H</code> - Zero-padded hour in 24-hour format (e.g., 8, 13, 0...).</li>
+<li><code>%i</code> - Non-zero-padded hour in 12-hour format (e.g., 8, 1, 12...).</li>
+<li><code>%I</code> - Zero-padded hour in 12-hour format (e.g., 08, 01, 12...).</li>
+<li><code>%m</code> - Zero-padded month (e.g., 01, 02...).</li>
+<li><code>%M</code> - Zero-padded minutes (e.g., 01, 12, 59...).</li>
+<li><code>%n</code> - Non-zero-padded month (e.g., 1, 2...).</li>
+<li><code>%N</code> - Non-zero-padded minutes (e.g., 1, 12, 59).</li>
+<li><code>%p</code> - AM/PM (a.m. and p.m.).</li>
+<li><code>%s</code> - Non-zero-padded seconds (e.g., 1, 2, 50...).</li>
+<li><code>%S</code> - Zero-padded seconds (e.g., 01, 02, 50...).</li>
+<li><code>%r</code> - Milliseconds (e.g., 1, 24, 500...).</li>
+<li><code>%y</code> - Zero-padded year without the century part (e.g., 01, 13, 99...).</li>
+<li><code>%Y</code> - Full year (e.g., 2001, 2013, 2099...).</li>
+<li><code>%z</code> - UTC offset in +HHMM or -HHMM format or 'Z' (e.g., +1000, -0200).</li>
+<li><code>%%</code> - literal percent character.</li>
+</ul>
+<p>The <code>%z</code> token behaves slightly differently when parsing date and time
+strings. In addition to formats that strftime outputs, it also supports
+'Z', which allows parsing of ISO timestamps.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let s1 = '2019 Jan 12 4:55 p.m.';
+let d1 = parse.strptime(s, '%Y %b %D %i:%M %p');
+// => new Date(2019, 0, 12, 16, 55)
+
+// With customized AM/PM
+let s2 = '18/March/2019 07:22am';
+let d2 = parse.strptime(s, '%d/%B/%Y %I:%M%p', {
+  AM: 'am',
+  PM: 'pm',
+});
+// => new Date(2019, 2, 18, 7, 22)</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>s</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Formatted date/time string</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>formatString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The expected format of the <code>s</code> argument</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>DEFAULT_CONFIG</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>Format configuration</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.2</a> on Mon Jun 10 2019 12:33:08 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
