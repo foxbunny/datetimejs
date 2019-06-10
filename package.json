@@ -1,7 +1,7 @@
 {
   "name": "datetimejs",
   "description": "Library for manipulating, formatting, and parsing dates and times",
-  "version": "0.3.5",
+  "version": "1.0.0",
   "main": "dist/datetime.js",
   "module": "dist/datetime.mjs",
   "browser": "dist/datetime.umd.js",
