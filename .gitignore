@@ -1,4 +1,4 @@
-node_modules
--p
-*.swp
-*.swo
+/node_modules
+/dist
+/docs
+*.log

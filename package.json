@@ -1,6 +1,10 @@
 {
   "name": "datetimejs",
   "description": "Library for manipulating, formatting, and parsing dates and times",
+  "version": "0.3.5",
+  "main": "dist/datetime.js",
+  "module": "dist/datetime.mjs",
+  "browser": "dist/datetime.umd.js",
   "homepage": "https://github.com/foxbunny/datetimejs/",
   "keywords": [
     "date",
@@ -20,10 +24,6 @@
     "type": "MIT",
     "url": "https://github.com/foxbunny/datetimejs/blob/master/LICENSE"
   },
-  "devDependencies": {
-    "chai": "*",
-    "mocha": "*"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/foxbunny/datetimejs.git"
@@ -31,6 +31,27 @@
   "engines": {
     "node": ">= 0.4.1"
   },
-  "main": "datetime.js",
-  "version": "0.3.5"
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "jest",
+    "build": "rollup -c",
+    "prepublish": "yarn run build",
+    "docs": "jsdoc -c jsdoc.config.js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "core-js": "2",
+    "docdash": "^1.1.1",
+    "jest": "^24.8.0",
+    "jest-date-mock": "^1.0.7",
+    "jsdoc": "^3.6.2",
+    "rollup": "^1.14.4",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.0.1"
+  },
+  "dependencies": {}
 }
